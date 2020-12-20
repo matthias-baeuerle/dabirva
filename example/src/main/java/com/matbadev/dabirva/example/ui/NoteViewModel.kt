@@ -4,7 +4,7 @@ import com.matbadev.dabirva.Recyclable
 import com.matbadev.dabirva.example.BR
 import com.matbadev.dabirva.example.R
 
-class NoteViewModel(
+data class NoteViewModel(
     override val id: Long,
     val text: String,
 ) : Recyclable {
