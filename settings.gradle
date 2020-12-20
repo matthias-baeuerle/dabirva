@@ -1,0 +1,3 @@
+include ':dabirva'
+include ':example'
+rootProject.name = "Dabirva"

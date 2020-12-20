@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Dabirva</string>
+
+    <string name="launch_title">Select example</string>
+
+    <string name="simple_title">SimpleListActivity</string>
+
+    <string name="stickyheader_title">StickyHeaderListActivity</string>
+</resources>
