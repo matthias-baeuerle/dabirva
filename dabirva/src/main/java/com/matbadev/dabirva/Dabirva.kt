@@ -5,16 +5,17 @@ import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.AdapterListUpdateCallback
+import androidx.recyclerview.widget.AsyncDifferConfig
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
-import com.matbadev.dabirva.internal.DecorationDiffUtilCallback
-import com.matbadev.dabirva.internal.DecorationListUpdateCallback
-import com.matbadev.dabirva.internal.DecorationListUpdateCallbackDelegate
 import com.matbadev.dabirva.internal.IdentifiablesDiffUtilCallback
-import com.matbadev.dabirva.internal.collectDecorations
-import java.lang.AssertionError
+import com.matbadev.dabirva.internal.IdentifiablesDiffUtilItemCallback
+import com.matbadev.dabirva.internal.RecyclerViewDecorationUpdater
+import com.matbadev.dabirva.internal.ConfigAsyncListDiffer
+import java.util.concurrent.Executor
 
 class Dabirva(
     initialRecyclerData: RecyclerData,
@@ -24,16 +25,22 @@ class Dabirva(
         set(newData) {
             val oldData: RecyclerData = field
             field = newData
+            refreshItemsDiffer(newData.diffExecutor)
             refreshItemsInAdapter(oldData.recyclables, newData.recyclables)
             attachedRecyclerView?.let { recyclerView: RecyclerView ->
                 refreshDecorationsInRecyclerView(recyclerView, newData.decorations)
             }
         }
 
+    private val decorationUpdater = RecyclerViewDecorationUpdater()
+
+    private var itemsDiffer: ConfigAsyncListDiffer<Identifiable>? = null
+
     private var attachedRecyclerView: RecyclerView? = null
 
     init {
         setHasStableIds(true)
+        refreshItemsDiffer(initialRecyclerData.diffExecutor)
     }
 
     override fun getItemCount(): Int {
@@ -85,25 +92,39 @@ class Dabirva(
         attachedRecyclerView = null
     }
 
+    private fun refreshItemsDiffer(diffExecutor: Executor?) {
+        if (diffExecutor == null) {
+            itemsDiffer = null
+        } else {
+            val currentDiffConfig: AsyncDifferConfig<Identifiable>? = itemsDiffer?.config
+            if (currentDiffConfig?.backgroundThreadExecutor != diffExecutor) {
+                itemsDiffer = ConfigAsyncListDiffer(
+                    AdapterListUpdateCallback(this),
+                    AsyncDifferConfig.Builder(IdentifiablesDiffUtilItemCallback())
+                        .setBackgroundThreadExecutor(diffExecutor)
+                        .build()
+                )
+            }
+        }
+    }
+
     private fun refreshItemsInAdapter(oldItems: List<Recyclable>, newItems: List<Recyclable>) {
+        val differ: AsyncListDiffer<Identifiable>? = itemsDiffer
+        if (differ != null) {
+            differ.submitList(newItems)
+        } else {
+            refreshItemsInAdapterSync(oldItems, newItems)
+        }
+    }
+
+    private fun refreshItemsInAdapterSync(oldItems: List<Recyclable>, newItems: List<Recyclable>) {
         val diffCallback: DiffUtil.Callback = IdentifiablesDiffUtilCallback(oldItems, newItems)
         val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(diffCallback)
         diffResult.dispatchUpdatesTo(this)
     }
 
     private fun refreshDecorationsInRecyclerView(recyclerView: RecyclerView, newDecorations: List<ItemDecoration>) {
-        val oldDecorations: List<ItemDecoration> = recyclerView.collectDecorations()
-        val diffCallback: DiffUtil.Callback = DecorationDiffUtilCallback(oldDecorations, newDecorations)
-        val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(diffCallback)
-        val updateCallbackDelegate = object : DecorationListUpdateCallbackDelegate {
-            override fun getDecoration(newPosition: Int): ItemDecoration {
-                val decorationPosition = diffResult.convertNewPositionToOld(newPosition)
-                if (decorationPosition == DiffUtil.DiffResult.NO_POSITION) throw AssertionError()
-                return newDecorations[newPosition]
-            }
-        }
-        val updateCallback: ListUpdateCallback = DecorationListUpdateCallback(recyclerView, updateCallbackDelegate)
-        diffResult.dispatchUpdatesTo(updateCallback)
+        decorationUpdater.updateDecorations(recyclerView, newDecorations)
     }
 
 }

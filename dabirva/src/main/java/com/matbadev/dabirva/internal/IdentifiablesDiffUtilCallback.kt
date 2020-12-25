@@ -3,10 +3,6 @@ package com.matbadev.dabirva.internal
 import androidx.recyclerview.widget.DiffUtil
 import com.matbadev.dabirva.Identifiable
 
-/**
- * A simple [DiffUtil.Callback] implementation that compares items implementing [Identifiable]
- * using their IDs. The items' content is compared using the [equals]-implementation.
- */
 internal class IdentifiablesDiffUtilCallback<T : Identifiable>(
     private val oldList: List<T>,
     private val newList: List<T>,
