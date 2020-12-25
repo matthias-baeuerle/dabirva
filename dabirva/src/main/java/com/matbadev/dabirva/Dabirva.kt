@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
+import com.matbadev.dabirva.internal.ConfigAsyncListDiffer
 import com.matbadev.dabirva.internal.IdentifiablesDiffUtilCallback
 import com.matbadev.dabirva.internal.IdentifiablesDiffUtilItemCallback
 import com.matbadev.dabirva.internal.RecyclerViewDecorationUpdater
-import com.matbadev.dabirva.internal.ConfigAsyncListDiffer
 import java.util.concurrent.Executor
 
 class Dabirva(
@@ -25,10 +25,8 @@ class Dabirva(
         set(newData) {
             val oldData: RecyclerData = field
             field = newData
-            refreshItemsDiffer(newData.diffExecutor)
-            refreshItemsInAdapter(oldData.recyclables, newData.recyclables)
-            attachedRecyclerView?.let { recyclerView: RecyclerView ->
-                refreshDecorationsInRecyclerView(recyclerView, newData.decorations)
+            if (oldData != newData) {
+                onRecyclerDataChanged(oldData, newData)
             }
         }
 
@@ -41,6 +39,14 @@ class Dabirva(
     init {
         setHasStableIds(true)
         refreshItemsDiffer(initialRecyclerData.diffExecutor)
+    }
+
+    private fun onRecyclerDataChanged(oldData: RecyclerData, newData: RecyclerData) {
+        refreshItemsDiffer(newData.diffExecutor)
+        refreshItemsInAdapter(oldData.recyclables, newData.recyclables)
+        attachedRecyclerView?.let { recyclerView: RecyclerView ->
+            refreshDecorationsInRecyclerView(recyclerView, newData.decorations)
+        }
     }
 
     override fun getItemCount(): Int {
