@@ -3,21 +3,20 @@ package com.matbadev.dabirva.example.ui.simple
 import com.matbadev.dabirva.RecyclerData
 import com.matbadev.dabirva.example.base.BaseScreenViewModel
 import com.matbadev.dabirva.example.data.Note
-import com.matbadev.dabirva.example.data.SynchronousNoteRepository
+import com.matbadev.dabirva.example.data.NoteRepository
 import com.matbadev.dabirva.example.ui.NoteViewModel
 
-@Suppress("CanBeParameter")
 class SimpleListViewModel(
-    private val synchronousNoteRepository: SynchronousNoteRepository,
+    private val noteRepository: NoteRepository,
 ) : BaseScreenViewModel<SimpleListEvent>() {
 
     val recyclerData = RecyclerData(
-        recyclables = synchronousNoteRepository.getNotes().map { note: Note ->
+        recyclables = noteRepository.getNotes().map { note: Note ->
             NoteViewModel(
                 id = note.id,
                 text = note.text,
             )
-        }
+        },
     )
 
 }

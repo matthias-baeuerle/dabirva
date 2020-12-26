@@ -10,7 +10,9 @@ class StickyHeaderListActivity : BaseActivity<StickyHeaderListEvent, StickyHeade
 ) {
 
     override fun buildViewModel(repositories: AppRepositories): StickyHeaderListViewModel {
-        return StickyHeaderListViewModel()
+        return StickyHeaderListViewModel(
+            noteRepository = repositories.noteRepository,
+        )
     }
 
     override fun handleScreenUiEvent(event: StickyHeaderListEvent) {

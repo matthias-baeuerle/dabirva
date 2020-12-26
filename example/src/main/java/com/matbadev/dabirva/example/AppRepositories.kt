@@ -1,9 +1,9 @@
 package com.matbadev.dabirva.example
 
-import com.matbadev.dabirva.example.data.SynchronousNoteRepository
+import com.matbadev.dabirva.example.data.NoteRepository
 
 class AppRepositories {
 
-    val synchronousNoteRepository = SynchronousNoteRepository()
+    val noteRepository = NoteRepository()
 
 }

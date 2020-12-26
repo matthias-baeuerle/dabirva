@@ -11,7 +11,7 @@ class SimpleListActivity : BaseActivity<SimpleListEvent, SimpleListViewModel>(
 
     override fun buildViewModel(repositories: AppRepositories): SimpleListViewModel {
         return SimpleListViewModel(
-            synchronousNoteRepository = repositories.synchronousNoteRepository,
+            noteRepository = repositories.noteRepository,
         )
     }
 
