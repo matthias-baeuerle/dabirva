@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">Dabirva</string>
-
-    <string name="launch_title">Select example</string>
+    <string name="app_name">Dabirva Example</string>
 
     <string name="simple_title">SimpleListActivity</string>
 

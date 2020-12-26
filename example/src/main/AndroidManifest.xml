@@ -23,7 +23,7 @@
 
         <activity
             android:name=".ui.launch.LaunchActivity"
-            android:label="@string/launch_title" />
+            android:label="@string/app_name" />
 
         <activity
             android:name=".ui.simple.SimpleListActivity"
