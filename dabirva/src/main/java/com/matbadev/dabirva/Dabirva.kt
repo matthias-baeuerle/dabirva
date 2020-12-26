@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.matbadev.dabirva.internal.ConfigAsyncListDiffer
 import com.matbadev.dabirva.internal.IdentifiablesDiffUtilCallback
 import com.matbadev.dabirva.internal.IdentifiablesDiffUtilItemCallback
@@ -129,7 +128,7 @@ class Dabirva(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun refreshDecorationsInRecyclerView(recyclerView: RecyclerView, newDecorations: List<ItemDecoration>) {
+    private fun refreshDecorationsInRecyclerView(recyclerView: RecyclerView, newDecorations: List<RecyclerView.ItemDecoration>) {
         decorationUpdater.updateDecorations(recyclerView, newDecorations)
     }
 

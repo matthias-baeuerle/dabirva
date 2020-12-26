@@ -4,27 +4,26 @@ import android.graphics.Canvas
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.matbadev.dabirva.DataBindingViewHolder
 import com.matbadev.dabirva.Dabirva
+import com.matbadev.dabirva.DataBindingViewHolder
 import com.matbadev.dabirva.Recyclable
 
-open class RecyclerStickyHeaderDecoration(
-    private val delegate: StickyHeaderDelegate,
-) : RecyclerView.ItemDecoration() {
+class StickyHeaderDecoration(
+    private val headerPositionProvider: HeaderPositionProvider,
+) : DabirvaItemDecoration() {
 
     private var currentHeaderViewHolder: DataBindingViewHolder? = null
 
-    override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        val adapter = parent.adapter as Dabirva
-
-        val headerRecyclable: Recyclable? = getHeaderRecyclable(parent, adapter)
+    override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State, dabirva: Dabirva) {
+        val recyclables: List<Recyclable> = dabirva.recyclerData.recyclables
+        val headerRecyclable: Recyclable? = getHeaderRecyclable(parent, recyclables)
         var headerViewHolder: DataBindingViewHolder? = currentHeaderViewHolder
 
         if (headerRecyclable != null) { // Header should be shown
             if (headerViewHolder != null) {
                 updateHeaderViewHolder(headerViewHolder, headerRecyclable)
             } else {
-                headerViewHolder = getOrCreateHeaderViewHolder(parent, adapter, headerRecyclable.layoutId)
+                headerViewHolder = getOrCreateHeaderViewHolder(parent, dabirva, headerRecyclable.layoutId)
                 makeViewSticky(parent, headerViewHolder.itemView)
                 currentHeaderViewHolder = headerViewHolder
             }
@@ -34,7 +33,7 @@ open class RecyclerStickyHeaderDecoration(
             val contactPoint: Int = headerView.bottom
             val childInContact: View? = getChildInContact(parent, contactPoint)
 
-            if (childInContact != null && isSticky(parent, childInContact)) {
+            if (childInContact != null && isItemSticky(parent, recyclables, childInContact)) {
                 moveHeader(canvas, headerView, childInContact)
             } else {
                 drawHeader(canvas, headerView)
@@ -46,16 +45,16 @@ open class RecyclerStickyHeaderDecoration(
         }
     }
 
-    private fun getHeaderRecyclable(parent: RecyclerView, adapter: Dabirva): Recyclable? {
+    private fun getHeaderRecyclable(parent: RecyclerView, recyclables: List<Recyclable>): Recyclable? {
         val topChild: View = parent.getChildAt(0) ?: return null
 
         val topChildAdapterPosition: Int = parent.getChildAdapterPosition(topChild)
         if (topChildAdapterPosition == RecyclerView.NO_POSITION) return null
 
-        val headerAdapterPosition: Int = delegate.getHeaderPositionForItem(topChildAdapterPosition)
+        val headerAdapterPosition: Int = headerPositionProvider.getHeaderPositionForItem(topChildAdapterPosition, recyclables)
         if (headerAdapterPosition == RecyclerView.NO_POSITION) return null
 
-        return adapter.recyclerData.recyclables[headerAdapterPosition]
+        return recyclables[headerAdapterPosition]
     }
 
     private fun updateHeaderViewHolder(headerViewHolder: DataBindingViewHolder, headerRecyclable: Recyclable) {
@@ -68,12 +67,12 @@ open class RecyclerStickyHeaderDecoration(
         }
     }
 
-    private fun getOrCreateHeaderViewHolder(parent: RecyclerView, adapter: Dabirva, headerViewType: Int): DataBindingViewHolder {
+    private fun getOrCreateHeaderViewHolder(parent: RecyclerView, dabirva: Dabirva, headerViewType: Int): DataBindingViewHolder {
         val cachedHeaderViewHolder: RecyclerView.ViewHolder? = parent.recycledViewPool.getRecycledView(headerViewType)
         return if (cachedHeaderViewHolder != null) {
             cachedHeaderViewHolder as DataBindingViewHolder
         } else {
-            adapter.createViewHolder(parent, headerViewType)
+            dabirva.createViewHolder(parent, headerViewType)
         }
     }
 
@@ -92,37 +91,6 @@ open class RecyclerStickyHeaderDecoration(
     }
 
     private fun getChildInContact(parent: RecyclerView, contactPoint: Int): View? {
-        /*
-        var childInContact: View? = null
-        for (position in 0 until parent.childCount) {
-            var heightTolerance = 0
-            val child: View = parent.getChildAt(position)
-
-            // Measure height tolerance with child if child is another header
-            if (currentHeaderPos != position) {
-                if (isSticky(parent, child)) {
-                    heightTolerance = stickyHeaderHeight - child.height
-                }
-            }
-
-            // Add heightTolerance if child top be in display area
-            val childBottomPosition: Int = if (child.top > 0) {
-                child.bottom + heightTolerance
-            } else {
-                child.bottom
-            }
-
-            if (childBottomPosition > contactPoint) {
-                if (child.top <= contactPoint) {
-                    // This child overlaps the contactPoint
-                    childInContact = child
-                    break
-                }
-            }
-        }
-        return childInContact
-        */
-
         for (position in 0 until parent.childCount) {
             val child: View = parent.getChildAt(position)
             if (child.bottom > contactPoint && child.top <= contactPoint) {
@@ -131,7 +99,6 @@ open class RecyclerStickyHeaderDecoration(
         }
         return null
     }
-
 
     /**
      * Properly measures and layouts the top sticky header.
@@ -143,17 +110,25 @@ open class RecyclerStickyHeaderDecoration(
         val heightSpec = View.MeasureSpec.makeMeasureSpec(parent.height, View.MeasureSpec.UNSPECIFIED)
 
         // Specs for children (headers)
-        val childWidthSpec = ViewGroup.getChildMeasureSpec(widthSpec, parent.paddingLeft + parent.paddingRight, view.layoutParams.width)
-        val childHeightSpec = ViewGroup.getChildMeasureSpec(heightSpec, parent.paddingTop + parent.paddingBottom, view.layoutParams.height)
+        val childWidthSpec = ViewGroup.getChildMeasureSpec(
+            widthSpec,
+            parent.paddingLeft + parent.paddingRight,
+            view.layoutParams.width
+        )
+        val childHeightSpec = ViewGroup.getChildMeasureSpec(
+            heightSpec,
+            parent.paddingTop + parent.paddingBottom,
+            view.layoutParams.height
+        )
 
         view.measure(childWidthSpec, childHeightSpec)
 
         view.layout(0, 0, view.measuredWidth, view.measuredHeight)
     }
 
-    private fun isSticky(parent: RecyclerView, child: View): Boolean {
-        val adapterPosition: Int = parent.getChildAdapterPosition(child)
-        return delegate.getHeaderPositionForItem(adapterPosition) == adapterPosition
+    private fun isItemSticky(parent: RecyclerView, recyclables: List<Recyclable>, itemView: View): Boolean {
+        val adapterPosition: Int = parent.getChildAdapterPosition(itemView)
+        return headerPositionProvider.getHeaderPositionForItem(adapterPosition, recyclables) == adapterPosition
     }
 
 }
