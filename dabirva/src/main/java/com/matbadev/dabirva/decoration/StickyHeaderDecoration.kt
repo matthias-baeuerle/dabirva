@@ -25,6 +25,7 @@ class StickyHeaderDecoration(
             } else {
                 headerViewHolder = getOrCreateHeaderViewHolder(parent, dabirva, headerRecyclable.layoutId)
                 makeViewSticky(parent, headerViewHolder.itemView)
+                headerViewHolder.bindItem(headerRecyclable)
                 currentHeaderViewHolder = headerViewHolder
             }
 
