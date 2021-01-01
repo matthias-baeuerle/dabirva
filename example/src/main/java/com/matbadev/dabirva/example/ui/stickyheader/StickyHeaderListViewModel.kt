@@ -26,22 +26,20 @@ class StickyHeaderListViewModel(
         ),
     )
 
-    private fun buildGroupViewModels(entry: Map.Entry<NotePriority, List<Note>>): Iterable<Recyclable> = Iterable {
-        iterator {
+    private fun buildGroupViewModels(entry: Map.Entry<NotePriority, List<Note>>): Sequence<Recyclable> = sequence {
+        yield(
+            NoteHeaderViewModel(
+                id = entry.key.ordinal.toLong(),
+                text = entry.key.name,
+            )
+        )
+        entry.value.forEach { note: Note ->
             yield(
-                NoteHeaderViewModel(
-                    id = entry.key.ordinal.toLong(),
-                    text = entry.key.name,
+                NoteRowViewModel(
+                    id = note.id,
+                    text = note.text,
                 )
             )
-            entry.value.forEach { note: Note ->
-                yield(
-                    NoteRowViewModel(
-                        id = note.id,
-                        text = note.text,
-                    )
-                )
-            }
         }
     }
 

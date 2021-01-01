@@ -2,28 +2,42 @@ package com.matbadev.dabirva.example.data
 
 class NoteRepository {
 
-    private val noteIterable: Iterable<Note> = Iterable { NoteGenerator() }
-
     fun getNotes(): List<Note> {
-        return noteIterable.take(50)
+        return generateNotes(10)
     }
 
-    private class NoteGenerator : Iterator<Note> {
+    private fun generateNotes(notesPerPriority: Int): List<Note> {
+        return NotePriority.values().flatMapIndexed { priorityIndex: Int, priority: NotePriority ->
+            Sequence {
+                NoteIterator(
+                    notesCount = notesPerPriority,
+                    initialNoteId = (priorityIndex * notesPerPriority) + 1L,
+                    priority = priority,
+                )
+            }
+        }
+    }
 
-        private val priorities: Array<NotePriority> = NotePriority.values()
+    private class NoteIterator(
+        notesCount: Int,
+        initialNoteId: Long,
+        private val priority: NotePriority,
+    ) : Iterator<Note> {
 
-        private var noteId: Long = 0
+        private var nextNoteId: Long = initialNoteId
+
+        private var lastNoteId: Long = initialNoteId + notesCount - 1
 
         override fun hasNext(): Boolean {
-            return true
+            return nextNoteId <= lastNoteId
         }
 
         override fun next(): Note {
-            noteId++
+            val noteId: Long = nextNoteId++
             return Note(
                 id = noteId,
                 text = "Note #$noteId",
-                priority = priorities.random(),
+                priority = priority,
             )
         }
 

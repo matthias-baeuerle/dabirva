@@ -1,9 +1,9 @@
 package com.matbadev.dabirva.example.data
 
 enum class NotePriority {
-    LOWEST,
-    LOW,
-    MEDIUM,
-    HIGH,
     HIGHEST,
+    HIGH,
+    MEDIUM,
+    LOW,
+    LOWEST,
 }
