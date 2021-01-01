@@ -17,4 +17,8 @@ abstract class DabirvaItemDecoration {
     open fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State, dabirva: Dabirva) {
     }
 
+    fun asRecyclerViewDecoration(): RecyclerView.ItemDecoration {
+        return DabirvaItemDecorationDelegate(this)
+    }
+
 }
