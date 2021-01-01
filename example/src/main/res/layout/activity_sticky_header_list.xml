@@ -16,6 +16,6 @@
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:recyclerData="@{viewModel.recyclerData}"
-        tools:listitem="@layout/item_note" />
+        tools:listitem="@layout/item_note_row" />
 
 </layout>

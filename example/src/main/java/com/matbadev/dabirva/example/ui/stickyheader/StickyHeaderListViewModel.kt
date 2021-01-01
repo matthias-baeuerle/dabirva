@@ -9,7 +9,7 @@ import com.matbadev.dabirva.example.data.Note
 import com.matbadev.dabirva.example.data.NotePriority
 import com.matbadev.dabirva.example.data.NoteRepository
 import com.matbadev.dabirva.example.ui.NoteHeaderViewModel
-import com.matbadev.dabirva.example.ui.NoteViewModel
+import com.matbadev.dabirva.example.ui.NoteRowViewModel
 
 class StickyHeaderListViewModel(
     private val noteRepository: NoteRepository,
@@ -36,7 +36,7 @@ class StickyHeaderListViewModel(
             )
             entry.value.forEach { note: Note ->
                 yield(
-                    NoteViewModel(
+                    NoteRowViewModel(
                         id = note.id,
                         text = note.text,
                     )
