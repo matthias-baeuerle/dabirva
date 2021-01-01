@@ -3,6 +3,7 @@ package com.matbadev.dabirva.decoration
 import android.graphics.Canvas
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.matbadev.dabirva.Dabirva
 import com.matbadev.dabirva.DataBindingViewHolder
@@ -15,6 +16,11 @@ class StickyHeaderDecoration(
     private var currentHeaderViewHolder: DataBindingViewHolder? = null
 
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State, dabirva: Dabirva) {
+        val layoutManager: RecyclerView.LayoutManager = parent.layoutManager ?: return
+        if (layoutManager !is LinearLayoutManager) {
+            throw UnsupportedOperationException("Only LinearLayoutManager is supported")
+        }
+
         val recyclables: List<Recyclable> = dabirva.recyclerData.recyclables
         val headerRecyclable: Recyclable? = getHeaderRecyclable(parent, recyclables)
         var headerViewHolder: DataBindingViewHolder? = currentHeaderViewHolder
