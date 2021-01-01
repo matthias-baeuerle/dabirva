@@ -1,13 +1,14 @@
-package com.matbadev.dabirva.decoration
+package com.matbadev.dabirva.internal
 
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.matbadev.dabirva.Dabirva
+import com.matbadev.dabirva.decoration.DabirvaItemDecoration
 
-class DabirvaItemDecorationDelegate(
-    val dabirvaItemDecoration: DabirvaItemDecoration,
+internal class DabirvaItemDecorationDelegate(
+    private val dabirvaItemDecoration: DabirvaItemDecoration,
 ) : RecyclerView.ItemDecoration() {
 
     override fun onDraw(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
