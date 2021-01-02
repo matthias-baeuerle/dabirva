@@ -10,20 +10,23 @@ import com.matbadev.dabirva.example.data.NotePriority
 import com.matbadev.dabirva.example.data.NoteRepository
 import com.matbadev.dabirva.example.ui.NoteHeaderViewModel
 import com.matbadev.dabirva.example.ui.NoteRowViewModel
+import com.matbadev.dabirva.util.NonNullObservableField
 
 class StickyHeaderListViewModel(
     private val noteRepository: NoteRepository,
 ) : BaseScreenViewModel<StickyHeaderListEvent>() {
 
-    val recyclerData = RecyclerData(
-        recyclables = noteRepository.getNotes()
-            .groupBy { note: Note -> note.priority }
-            .flatMap(::buildGroupViewModels),
-        decorations = listOf(
-            StickyHeaderDecoration(
-                headerPositionProvider = ItemHeaderProvider { it is NoteHeaderViewModel },
-            ).asRecyclerViewDecoration(),
-        ),
+    val recyclerData = NonNullObservableField(
+        RecyclerData(
+            recyclables = noteRepository.getNotes()
+                .groupBy { note: Note -> note.priority }
+                .flatMap(::buildGroupViewModels),
+            decorations = listOf(
+                StickyHeaderDecoration(
+                    headerPositionProvider = ItemHeaderProvider { it is NoteHeaderViewModel },
+                ).asRecyclerViewDecoration(),
+            ),
+        )
     )
 
     private fun buildGroupViewModels(entry: Map.Entry<NotePriority, List<Note>>): Sequence<Recyclable> = sequence {
