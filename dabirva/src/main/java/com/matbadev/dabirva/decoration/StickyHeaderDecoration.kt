@@ -17,6 +17,7 @@ class StickyHeaderDecoration(
 
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State, dabirva: Dabirva) {
         val layoutManager: RecyclerView.LayoutManager = parent.layoutManager ?: return
+        // TODO: Check for GridLayoutManager which extends LinearLayoutManager
         if (layoutManager !is LinearLayoutManager) {
             throw UnsupportedOperationException("Only LinearLayoutManager is supported")
         }

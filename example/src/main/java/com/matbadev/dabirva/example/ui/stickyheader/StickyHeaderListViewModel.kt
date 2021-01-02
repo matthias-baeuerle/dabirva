@@ -24,7 +24,7 @@ class StickyHeaderListViewModel(
             decorations = listOf(
                 StickyHeaderDecoration(
                     headerPositionProvider = ItemHeaderProvider { it is NoteHeaderViewModel },
-                ).asRecyclerViewDecoration(),
+                ),
             ),
         )
     )
