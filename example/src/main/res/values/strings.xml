@@ -4,4 +4,6 @@
     <string name="simple_title">SimpleListActivity</string>
 
     <string name="stickyheader_title">StickyHeaderListActivity</string>
+    <string name="stickyheader_title_horizontal">StickyHeaderListActivity (horizontal)</string>
+    <string name="stickyheader_title_vertical">StickyHeaderListActivity (vertical)</string>
 </resources>

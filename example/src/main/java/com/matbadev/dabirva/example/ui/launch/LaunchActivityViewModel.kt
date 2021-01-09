@@ -1,26 +1,38 @@
 package com.matbadev.dabirva.example.ui.launch
 
-import android.app.Activity
+import com.matbadev.dabirva.LinearOrientation
 import com.matbadev.dabirva.example.base.BaseScreenViewModel
 import com.matbadev.dabirva.example.base.StartActivityEvent
+import com.matbadev.dabirva.example.base.StartAppActivityEvent
 import com.matbadev.dabirva.example.ui.simple.SimpleListActivity
 import com.matbadev.dabirva.example.ui.stickyheader.StickyHeaderListActivity
-import kotlin.reflect.KClass
+import com.matbadev.dabirva.example.ui.stickyheader.StickyHeaderListArguments
 
-class LaunchActivityViewModel : BaseScreenViewModel<LaunchActivityEvent>() {
+class LaunchActivityViewModel : BaseScreenViewModel<LaunchActivityEvent, LaunchActivityArguments>() {
 
     fun startSimpleListActivity() {
-        startActivity(SimpleListActivity::class)
-    }
-
-    fun startStickyHeaderListActivity() {
-        startActivity(StickyHeaderListActivity::class)
-    }
-
-    private fun startActivity(activityClass: KClass<out Activity>) {
         queueCommonUiEvent(
             StartActivityEvent(
-                activityClass = activityClass.java,
+                activityClass = SimpleListActivity::class,
+            )
+        )
+    }
+
+    fun startHorizontalStickyHeaderListActivity() {
+        startStickyHeaderListActivity(LinearOrientation.HORIZONTAL)
+    }
+
+    fun startVerticalStickyHeaderListActivity() {
+        startStickyHeaderListActivity(LinearOrientation.VERTICAL)
+    }
+
+    private fun startStickyHeaderListActivity(listOrientation: LinearOrientation) {
+        queueCommonUiEvent(
+            StartAppActivityEvent(
+                activityClass = StickyHeaderListActivity::class,
+                arguments = StickyHeaderListArguments(
+                    listOrientation = listOrientation,
+                ),
             )
         )
     }

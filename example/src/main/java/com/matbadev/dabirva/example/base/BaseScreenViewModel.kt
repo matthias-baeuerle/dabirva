@@ -8,22 +8,25 @@ import com.matbadev.dabirva.example.util.UnicastObservableQueue
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 
-abstract class BaseScreenViewModel<SE> : ViewModel() {
+abstract class BaseScreenViewModel<E, A : BaseScreenArguments> : ViewModel() {
 
     companion object {
+        const val SCREEN_ARGUMENTS_KEY = "screenArguments"
+
         private const val VIEW_MODEL_STATE_KEY = "viewModel"
     }
 
     private val commonUiEvents = UnicastObservableQueue<CommonUiEvent>()
 
-    private val screenUiEvents = UnicastObservableQueue<SE>()
+    private val screenUiEvents = UnicastObservableQueue<E>()
 
     private val firstCreationDone = AtomicBoolean(false)
 
-    fun registerUi(arguments: Bundle?, savedInstanceState: Bundle?, uiEventHandler: UiEventHandler<SE>) {
+    fun registerUi(intentExtras: Bundle?, savedInstanceState: Bundle?, uiEventHandler: UiEventHandler<E>) {
         if (firstCreationDone.compareAndSet(false, true)) {
-            Timber.d("Initializing ViewModel $this with arguments $arguments and savedInstanceState $savedInstanceState")
-            initWithArguments(arguments ?: Bundle.EMPTY)
+            Timber.d("Initializing ViewModel $this with intent extras $intentExtras and savedInstanceState $savedInstanceState")
+            val screenArguments: A? = intentExtras?.getParcelable<A>(SCREEN_ARGUMENTS_KEY)
+            initWithArguments(screenArguments)
             if (savedInstanceState != null) {
                 // App process was killed by OS
                 val viewModelState: Bundle? = savedInstanceState.getBundle(VIEW_MODEL_STATE_KEY)
@@ -41,7 +44,7 @@ abstract class BaseScreenViewModel<SE> : ViewModel() {
         screenUiEvents.stopObserving()
     }
 
-    open fun initWithArguments(arguments: Bundle) {
+    open fun initWithArguments(arguments: A?) {
     }
 
     @AnyThread
@@ -50,7 +53,7 @@ abstract class BaseScreenViewModel<SE> : ViewModel() {
     }
 
     @AnyThread
-    fun queueScreenUiEvent(event: SE) {
+    fun queueScreenUiEvent(event: E) {
         screenUiEvents.add(event)
     }
 

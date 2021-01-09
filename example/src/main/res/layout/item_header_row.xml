@@ -6,17 +6,16 @@
 
         <variable
             name="viewModel"
-            type="com.matbadev.dabirva.example.ui.NoteRowViewModel" />
+            type="com.matbadev.dabirva.example.ui.HeaderRowViewModel" />
     </data>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="?android:attr/listPreferredItemHeightSmall"
-        android:background="@{viewModel.color}"
+        android:background="#333"
         android:gravity="center"
         android:text="@{String.valueOf(viewModel.id)}"
-        android:textColor="@color/black"
-        tools:background="#ffcdd2"
+        android:textColor="@color/white"
         tools:text="42" />
 
 </layout>

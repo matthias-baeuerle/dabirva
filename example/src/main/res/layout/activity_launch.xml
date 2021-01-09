@@ -33,10 +33,21 @@
                 android:layout_height="?android:attr/listPreferredItemHeight"
                 android:background="?android:attr/selectableItemBackground"
                 android:gravity="center_vertical"
-                android:onClick="@{view -> viewModel.startStickyHeaderListActivity()}"
+                android:onClick="@{view -> viewModel.startHorizontalStickyHeaderListActivity()}"
                 android:paddingStart="?android:attr/listPreferredItemPaddingStart"
                 android:paddingEnd="?android:attr/listPreferredItemPaddingRight"
-                android:text="@string/stickyheader_title"
+                android:text="@string/stickyheader_title_horizontal"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/listPreferredItemHeight"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:onClick="@{view -> viewModel.startVerticalStickyHeaderListActivity()}"
+                android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+                android:paddingEnd="?android:attr/listPreferredItemPaddingRight"
+                android:text="@string/stickyheader_title_vertical"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
         </LinearLayout>

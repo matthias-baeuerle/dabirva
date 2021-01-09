@@ -3,7 +3,6 @@ package com.matbadev.dabirva.example.base
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
@@ -12,14 +11,14 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.matbadev.dabirva.example.App
-import com.matbadev.dabirva.example.BR
 import com.matbadev.dabirva.example.AppRepositories
+import com.matbadev.dabirva.example.BR
 import kotlin.reflect.KClass
 
-abstract class BaseActivity<SE, VM : BaseScreenViewModel<SE>>(
+abstract class BaseActivity<E, A : BaseScreenArguments, VM : BaseScreenViewModel<E, A>>(
     private val viewModelClass: KClass<VM>,
     @LayoutRes private val layoutId: Int,
-) : AppCompatActivity(), ViewModelProvider.Factory, UiEventHandler<SE> {
+) : AppCompatActivity(), ViewModelProvider.Factory, UiEventHandler<E> {
 
     protected lateinit var viewModel: VM
 
@@ -30,7 +29,7 @@ abstract class BaseActivity<SE, VM : BaseScreenViewModel<SE>>(
         super.onCreate(savedInstanceState)
         val viewModelProvider = ViewModelProvider(this, this)
         viewModel = viewModelProvider.get(viewModelClass.java)
-        viewModel.registerUi(intent.extras, savedInstanceState, this)
+        viewModel.registerUi(intent?.extras, savedInstanceState, this)
         binding = DataBindingUtil.setContentView(this, layoutId, null)
         binding.lifecycleOwner = this
         if (!binding.setVariable(BR.viewModel, viewModel)) throw AssertionError()
@@ -47,7 +46,15 @@ abstract class BaseActivity<SE, VM : BaseScreenViewModel<SE>>(
 
     final override fun handleCommonUiEvent(event: CommonUiEvent) = when (event) {
         is StartActivityEvent -> {
-            startActivity(Intent(this, event.activityClass), event.options)
+            val intent = Intent(this, event.activityClass.java)
+            startActivity(intent, event.options)
+        }
+        is StartAppActivityEvent<*> -> {
+            val intent = Intent(this, event.activityClass.java)
+            event.arguments?.let { arguments: BaseScreenArguments ->
+                intent.putExtra(BaseScreenViewModel.SCREEN_ARGUMENTS_KEY, arguments)
+            }
+            startActivity(intent, event.options)
         }
         is ShowToastEvent -> {
             Toast.makeText(this, event.messageProvider(this), event.duration.androidValue).show()

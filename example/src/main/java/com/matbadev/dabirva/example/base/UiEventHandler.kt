@@ -1,9 +1,9 @@
 package com.matbadev.dabirva.example.base
 
-interface UiEventHandler<SE> {
+interface UiEventHandler<E> {
 
     fun handleCommonUiEvent(event: CommonUiEvent)
 
-    fun handleScreenUiEvent(event: SE)
+    fun handleScreenUiEvent(event: E)
 
 }

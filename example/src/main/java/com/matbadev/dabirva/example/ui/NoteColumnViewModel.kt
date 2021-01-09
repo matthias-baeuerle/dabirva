@@ -5,13 +5,13 @@ import com.matbadev.dabirva.Recyclable
 import com.matbadev.dabirva.example.BR
 import com.matbadev.dabirva.example.R
 
-data class NoteRowViewModel(
+data class NoteColumnViewModel(
     override val id: Long,
     val text: String,
     @ColorInt val color: Int,
 ) : Recyclable {
 
-    override val layoutId: Int = R.layout.item_note_row
+    override val layoutId: Int = R.layout.item_note_column
 
     override val bindingId: Int = BR.viewModel
 

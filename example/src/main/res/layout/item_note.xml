@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.matbadev.dabirva.example.ui.NoteViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingRight">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.text}"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="Note #42" />
+
+    </LinearLayout>
+
+</layout>

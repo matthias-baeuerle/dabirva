@@ -4,7 +4,7 @@ import com.matbadev.dabirva.example.AppRepositories
 import com.matbadev.dabirva.example.R
 import com.matbadev.dabirva.example.base.BaseActivity
 
-class SimpleListActivity : BaseActivity<SimpleListEvent, SimpleListViewModel>(
+class SimpleListActivity : BaseActivity<SimpleListEvent, SimpleListActivityArguments, SimpleListViewModel>(
     viewModelClass = SimpleListViewModel::class,
     layoutId = R.layout.activity_simple_list,
 ) {
