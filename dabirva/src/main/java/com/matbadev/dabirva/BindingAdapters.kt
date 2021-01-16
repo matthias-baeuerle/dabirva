@@ -3,12 +3,12 @@ package com.matbadev.dabirva
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-@BindingAdapter("recyclerData")
-fun setRecyclerData(recyclerView: RecyclerView, recyclerData: RecyclerData?) {
-    if (recyclerData == null) return
+@BindingAdapter("dabirvaData")
+fun setDabirvaData(recyclerView: RecyclerView, dabirvaData: DabirvaData?) {
+    if (dabirvaData == null) return
     when (val currentAdapter: RecyclerView.Adapter<*>? = recyclerView.adapter) {
-        null -> recyclerView.adapter = Dabirva(recyclerData)
-        is Dabirva -> currentAdapter.recyclerData = recyclerData
+        null -> recyclerView.adapter = Dabirva(dabirvaData)
+        is Dabirva -> currentAdapter.data = dabirvaData
         else -> throw IllegalStateException("Different adapter already set")
     }
 }

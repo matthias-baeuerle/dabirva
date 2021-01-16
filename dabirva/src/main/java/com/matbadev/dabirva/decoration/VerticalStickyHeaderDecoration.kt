@@ -53,7 +53,7 @@ class VerticalStickyHeaderDecoration(
         val headerView: View = headerViewHolder.itemView
         val childInContact: View? = getChildInContact(parent, headerView.bottom)
         canvas.save()
-        if (childInContact != null && isItemSticky(parent, dabirva.recyclerData.recyclables, childInContact)) {
+        if (childInContact != null && isItemSticky(parent, dabirva.data.recyclables, childInContact)) {
             canvas.translate(0F, (childInContact.top - headerView.height).toFloat())
         } else {
             canvas.translate(0F, 0F)

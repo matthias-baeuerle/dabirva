@@ -232,13 +232,13 @@ class DabirvaRecyclablesDiffingInstrumentedTest {
     private fun runTestSync(initialRecyclables: List<Recyclable>, updatedRecyclables: List<Recyclable>) {
         val recyclerView = RecyclerView(context)
         val adapter = Dabirva(
-            initialRecyclerData = RecyclerData(
+            initialData = DabirvaData(
                 recyclables = initialRecyclables,
             ),
         )
         adapter.registerAdapterDataObserver(adapterDataObserver)
         adapter.attachRecyclerView(recyclerView)
-        adapter.recyclerData = adapter.recyclerData.copy(
+        adapter.data = adapter.data.copy(
             recyclables = updatedRecyclables,
         )
     }
@@ -253,19 +253,19 @@ class DabirvaRecyclablesDiffingInstrumentedTest {
 
         val recyclerView = RecyclerView(context)
         val adapter = Dabirva(
-            initialRecyclerData = RecyclerData(
+            initialData = DabirvaData(
                 diffExecutor = diffExecutor,
             ),
         )
 
         // The initial insert happens synchronously (see AsyncListDiffer)
-        adapter.recyclerData = adapter.recyclerData.copy(
+        adapter.data = adapter.data.copy(
             recyclables = initialRecyclables,
         )
 
         adapter.registerAdapterDataObserver(adapterDataObserver)
         adapter.attachRecyclerView(recyclerView)
-        adapter.recyclerData = adapter.recyclerData.copy(
+        adapter.data = adapter.data.copy(
             recyclables = updatedRecyclables,
         )
 

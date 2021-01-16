@@ -1,7 +1,7 @@
 package com.matbadev.dabirva.example.ui.stickyheader.horizontal
 
+import com.matbadev.dabirva.DabirvaData
 import com.matbadev.dabirva.Recyclable
-import com.matbadev.dabirva.RecyclerData
 import com.matbadev.dabirva.decoration.HorizontalStickyHeaderDecoration
 import com.matbadev.dabirva.decoration.ItemHeaderProvider
 import com.matbadev.dabirva.example.base.BaseScreenViewModel
@@ -15,11 +15,11 @@ class HorizontalStickyHeaderListViewModel(
     private val noteRepository: NoteRepository,
 ) : BaseScreenViewModel<HorizontalStickyHeaderListEvent, HorizontalStickyHeaderListArguments>() {
 
-    lateinit var recyclerData: RecyclerData
+    lateinit var dabirvaData: DabirvaData
 
     override fun initWithArguments(arguments: HorizontalStickyHeaderListArguments?) {
         super.initWithArguments(arguments)
-        recyclerData = RecyclerData(
+        dabirvaData = DabirvaData(
             recyclables = noteRepository.getNotes()
                 .groupBy { note -> note.priority }
                 .flatMap { noteEntry -> buildHorizontalGroupViewModels(noteEntry) },

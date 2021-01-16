@@ -17,15 +17,15 @@ import com.matbadev.dabirva.internal.RecyclerViewDecorationUpdater
 import java.util.concurrent.Executor
 
 class Dabirva(
-    initialRecyclerData: RecyclerData,
+    initialData: DabirvaData,
 ) : RecyclerView.Adapter<DataBindingViewHolder>() {
 
-    var recyclerData: RecyclerData = initialRecyclerData
+    var data: DabirvaData = initialData
         set(newData) {
-            val oldData: RecyclerData = field
+            val oldData: DabirvaData = field
             field = newData
             if (oldData != newData) {
-                onRecyclerDataChanged(oldData, newData)
+                onDataChanged(oldData, newData)
             }
         }
 
@@ -37,10 +37,10 @@ class Dabirva(
 
     init {
         setHasStableIds(true)
-        refreshItemsDiffer(initialRecyclerData.diffExecutor)
+        refreshItemsDiffer(initialData.diffExecutor)
     }
 
-    private fun onRecyclerDataChanged(oldData: RecyclerData, newData: RecyclerData) {
+    private fun onDataChanged(oldData: DabirvaData, newData: DabirvaData) {
         refreshItemsDiffer(newData.diffExecutor)
         refreshItemsInAdapter(oldData.recyclables, newData.recyclables)
         attachedRecyclerView?.let { recyclerView: RecyclerView ->
@@ -49,16 +49,16 @@ class Dabirva(
     }
 
     override fun getItemCount(): Int {
-        return recyclerData.recyclables.size
+        return data.recyclables.size
     }
 
     override fun getItemId(position: Int): Long {
-        val recyclable: Recyclable = recyclerData.recyclables[position]
+        val recyclable: Recyclable = data.recyclables[position]
         return recyclable.id
     }
 
     override fun getItemViewType(position: Int): Int {
-        val recyclable: Recyclable = recyclerData.recyclables[position]
+        val recyclable: Recyclable = data.recyclables[position]
         return recyclable.layoutId
     }
 
@@ -69,7 +69,7 @@ class Dabirva(
     }
 
     override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int) {
-        val recyclable: Recyclable = recyclerData.recyclables[position]
+        val recyclable: Recyclable = data.recyclables[position]
         holder.bindItem(recyclable)
     }
 
@@ -79,8 +79,9 @@ class Dabirva(
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
         attachRecyclerView(recyclerView)
-        refreshDecorationsInRecyclerView(recyclerView, recyclerData.decorations)
+        refreshDecorationsInRecyclerView(recyclerView, data.decorations)
     }
 
     @VisibleForTesting
@@ -89,6 +90,7 @@ class Dabirva(
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
         detachRecyclerView()
     }
 
