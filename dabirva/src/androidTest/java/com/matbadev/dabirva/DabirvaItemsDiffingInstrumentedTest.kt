@@ -29,10 +29,7 @@ import java.util.concurrent.TimeUnit
 @RunWith(AndroidJUnit4::class)
 class DabirvaItemsDiffingInstrumentedTest {
 
-    enum class DiffExecutorMode {
-        SYNC,
-        ASYNC,
-    }
+    enum class DiffExecutorMode { SYNC, ASYNC }
 
     @Rule
     @JvmField
