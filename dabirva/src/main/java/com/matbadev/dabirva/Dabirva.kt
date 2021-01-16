@@ -22,11 +22,9 @@ class Dabirva(
 
     var data: DabirvaData = initialData
         set(newData) {
-            val oldData: DabirvaData = field
+            val oldData = field
             field = newData
-            if (oldData != newData) {
-                onDataChanged(oldData, newData)
-            }
+            onDataChanged(oldData, newData)
         }
 
     private val decorationUpdater = RecyclerViewDecorationUpdater()
