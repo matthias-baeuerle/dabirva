@@ -1,7 +1,7 @@
 package com.matbadev.dabirva.example.ui.stickyheader.horizontal
 
 import com.matbadev.dabirva.DabirvaData
-import com.matbadev.dabirva.Recyclable
+import com.matbadev.dabirva.ItemViewModel
 import com.matbadev.dabirva.decoration.HorizontalStickyHeaderDecoration
 import com.matbadev.dabirva.decoration.ItemHeaderProvider
 import com.matbadev.dabirva.example.base.BaseScreenViewModel
@@ -20,10 +20,10 @@ class HorizontalStickyHeaderListViewModel(
     override fun initWithArguments(arguments: HorizontalStickyHeaderListArguments?) {
         super.initWithArguments(arguments)
         dabirvaData = DabirvaData(
-            recyclables = noteRepository.getNotes()
+            items = noteRepository.getNotes()
                 .groupBy { note -> note.priority }
                 .flatMap { noteEntry -> buildHorizontalGroupViewModels(noteEntry) },
-            decorations = listOf(
+            itemDecorations = listOf(
                 HorizontalStickyHeaderDecoration(
                     headerPositionProvider = ItemHeaderProvider { it is HeaderColumnViewModel },
                 ),
@@ -31,7 +31,7 @@ class HorizontalStickyHeaderListViewModel(
         )
     }
 
-    private fun buildHorizontalGroupViewModels(noteEntry: Map.Entry<NotePriority, List<Note>>): Sequence<Recyclable> {
+    private fun buildHorizontalGroupViewModels(noteEntry: Map.Entry<NotePriority, List<Note>>): Sequence<ItemViewModel> {
         return sequence {
             yield(HeaderColumnViewModel(
                 id = noteEntry.key.ordinal.toLong(),

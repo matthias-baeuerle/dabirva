@@ -14,7 +14,7 @@ class SimpleListActivityViewModel(
 
     override fun initWithArguments(arguments: SimpleListActivityArguments?) {
         DabirvaData(
-            recyclables = noteRepository.getNotes().map { note: Note ->
+            items = noteRepository.getNotes().map { note: Note ->
                 NoteViewModel(
                     id = note.id,
                     text = note.text,

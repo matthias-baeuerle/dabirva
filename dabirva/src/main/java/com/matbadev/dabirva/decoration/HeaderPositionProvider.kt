@@ -1,9 +1,9 @@
 package com.matbadev.dabirva.decoration
 
-import com.matbadev.dabirva.Recyclable
+import com.matbadev.dabirva.ItemViewModel
 
 interface HeaderPositionProvider {
 
-    fun getHeaderPositionForItem(itemPosition: Int, recyclables: List<Recyclable>): Int
+    fun getHeaderPositionForItem(itemPosition: Int, items: List<ItemViewModel>): Int
 
 }

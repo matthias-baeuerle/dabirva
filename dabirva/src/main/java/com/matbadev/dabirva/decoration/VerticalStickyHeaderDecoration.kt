@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.matbadev.dabirva.Dabirva
 import com.matbadev.dabirva.DataBindingViewHolder
-import com.matbadev.dabirva.Recyclable
+import com.matbadev.dabirva.ItemViewModel
 
 class VerticalStickyHeaderDecoration(
     headerPositionProvider: HeaderPositionProvider,
@@ -52,7 +52,7 @@ class VerticalStickyHeaderDecoration(
         val headerView: View = headerViewHolder.itemView
         val childInContact: View? = getChildInContact(parent, headerView.bottom)
         canvas.save()
-        if (childInContact != null && isItemSticky(parent, dabirva.data.recyclables, childInContact)) {
+        if (childInContact != null && isItemSticky(parent, dabirva.data.items, childInContact)) {
             canvas.translate(0F, (childInContact.top - headerView.height).toFloat())
         } else {
             canvas.translate(0F, 0F)
@@ -71,9 +71,9 @@ class VerticalStickyHeaderDecoration(
         return null
     }
 
-    private fun isItemSticky(parent: RecyclerView, recyclables: List<Recyclable>, itemView: View): Boolean {
+    private fun isItemSticky(parent: RecyclerView, itemViewModels: List<ItemViewModel>, itemView: View): Boolean {
         val adapterPosition: Int = parent.getChildAdapterPosition(itemView)
-        return headerPositionProvider.getHeaderPositionForItem(adapterPosition, recyclables) == adapterPosition
+        return headerPositionProvider.getHeaderPositionForItem(adapterPosition, itemViewModels) == adapterPosition
     }
 
 }

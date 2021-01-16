@@ -5,11 +5,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.matbadev.dabirva.TestRecyclables.A
-import com.matbadev.dabirva.TestRecyclables.B
-import com.matbadev.dabirva.TestRecyclables.C
-import com.matbadev.dabirva.TestRecyclables.D
-import com.matbadev.dabirva.TestRecyclables.E
+import com.matbadev.dabirva.TestItemViewModels.A
+import com.matbadev.dabirva.TestItemViewModels.B
+import com.matbadev.dabirva.TestItemViewModels.C
+import com.matbadev.dabirva.TestItemViewModels.D
+import com.matbadev.dabirva.TestItemViewModels.E
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,7 +27,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
-class DabirvaRecyclablesDiffingInstrumentedTest {
+class DabirvaItemsDiffingInstrumentedTest {
 
     enum class DiffExecutorMode {
         SYNC,
@@ -55,8 +55,8 @@ class DabirvaRecyclablesDiffingInstrumentedTest {
 
     private fun insertSingle(diffExecutorMode: DiffExecutorMode) {
         runTest(
-            initialRecyclables = listOf(A, B, C),
-            updatedRecyclables = listOf(A, B, D, C),
+            initialItems = listOf(A, B, C),
+            updatedItems = listOf(A, B, D, C),
             diffExecutorMode = diffExecutorMode,
         )
         verify(adapterDataObserver).onItemRangeInserted(2, 1)
@@ -75,8 +75,8 @@ class DabirvaRecyclablesDiffingInstrumentedTest {
 
     private fun insertMultiple(diffExecutorMode: DiffExecutorMode) {
         runTest(
-            initialRecyclables = listOf(A, B, C),
-            updatedRecyclables = listOf(A, B, D, C, E),
+            initialItems = listOf(A, B, C),
+            updatedItems = listOf(A, B, D, C, E),
             diffExecutorMode = diffExecutorMode,
         )
         inOrder(adapterDataObserver).apply {
@@ -98,8 +98,8 @@ class DabirvaRecyclablesDiffingInstrumentedTest {
 
     private fun removeSingle(diffExecutorMode: DiffExecutorMode) {
         runTest(
-            initialRecyclables = listOf(A, B, C),
-            updatedRecyclables = listOf(A, C),
+            initialItems = listOf(A, B, C),
+            updatedItems = listOf(A, C),
             diffExecutorMode = diffExecutorMode,
         )
         verify(adapterDataObserver).onItemRangeRemoved(1, 1)
@@ -118,8 +118,8 @@ class DabirvaRecyclablesDiffingInstrumentedTest {
 
     private fun removeMultiple(diffExecutorMode: DiffExecutorMode) {
         runTest(
-            initialRecyclables = listOf(A, B, C),
-            updatedRecyclables = listOf(B),
+            initialItems = listOf(A, B, C),
+            updatedItems = listOf(B),
             diffExecutorMode = diffExecutorMode,
         )
         inOrder(adapterDataObserver).apply {
@@ -141,8 +141,8 @@ class DabirvaRecyclablesDiffingInstrumentedTest {
 
     private fun changeSingle(diffExecutorMode: DiffExecutorMode) {
         runTest(
-            initialRecyclables = listOf(A, TestRecyclable(2, "initial"), C),
-            updatedRecyclables = listOf(A, TestRecyclable(2, "updated"), C),
+            initialItems = listOf(A, TestItemViewModel(2, "initial"), C),
+            updatedItems = listOf(A, TestItemViewModel(2, "updated"), C),
             diffExecutorMode = diffExecutorMode,
         )
         verify(adapterDataObserver).onItemRangeChanged(1, 1, null)
@@ -161,8 +161,8 @@ class DabirvaRecyclablesDiffingInstrumentedTest {
 
     private fun changeMultiple(diffExecutorMode: DiffExecutorMode) {
         runTest(
-            initialRecyclables = listOf(A, TestRecyclable(2, "initial"), C, TestRecyclable(4, "initial")),
-            updatedRecyclables = listOf(A, TestRecyclable(2, "updated"), C, TestRecyclable(4, "updated")),
+            initialItems = listOf(A, TestItemViewModel(2, "initial"), C, TestItemViewModel(4, "initial")),
+            updatedItems = listOf(A, TestItemViewModel(2, "updated"), C, TestItemViewModel(4, "updated")),
             diffExecutorMode = diffExecutorMode,
         )
         inOrder(adapterDataObserver).apply {
@@ -184,8 +184,8 @@ class DabirvaRecyclablesDiffingInstrumentedTest {
 
     private fun moveSingle(diffExecutorMode: DiffExecutorMode) {
         runTest(
-            initialRecyclables = listOf(A, B, C),
-            updatedRecyclables = listOf(B, A, C),
+            initialItems = listOf(A, B, C),
+            updatedItems = listOf(B, A, C),
             diffExecutorMode = diffExecutorMode,
         )
         verify(adapterDataObserver).onItemRangeMoved(1, 0, 1)
@@ -204,8 +204,8 @@ class DabirvaRecyclablesDiffingInstrumentedTest {
 
     private fun moveMultiple(diffExecutorMode: DiffExecutorMode) {
         runTest(
-            initialRecyclables = listOf(A, B, C, D),
-            updatedRecyclables = listOf(D, A, C, B),
+            initialItems = listOf(A, B, C, D),
+            updatedItems = listOf(D, A, C, B),
             diffExecutorMode = diffExecutorMode,
         )
         inOrder(adapterDataObserver).apply {
@@ -221,29 +221,29 @@ class DabirvaRecyclablesDiffingInstrumentedTest {
     }
 
     private fun runTest(
-        initialRecyclables: List<Recyclable>,
-        updatedRecyclables: List<Recyclable>,
+        initialItems: List<ItemViewModel>,
+        updatedItems: List<ItemViewModel>,
         diffExecutorMode: DiffExecutorMode,
     ) = when (diffExecutorMode) {
-        DiffExecutorMode.SYNC -> runTestSync(initialRecyclables, updatedRecyclables)
-        DiffExecutorMode.ASYNC -> runTestAsync(initialRecyclables, updatedRecyclables)
+        DiffExecutorMode.SYNC -> runTestSync(initialItems, updatedItems)
+        DiffExecutorMode.ASYNC -> runTestAsync(initialItems, updatedItems)
     }
 
-    private fun runTestSync(initialRecyclables: List<Recyclable>, updatedRecyclables: List<Recyclable>) {
+    private fun runTestSync(initialItems: List<ItemViewModel>, updatedItems: List<ItemViewModel>) {
         val recyclerView = RecyclerView(context)
         val adapter = Dabirva(
             initialData = DabirvaData(
-                recyclables = initialRecyclables,
+                items = initialItems,
             ),
         )
         adapter.registerAdapterDataObserver(adapterDataObserver)
         adapter.attachRecyclerView(recyclerView)
         adapter.data = adapter.data.copy(
-            recyclables = updatedRecyclables,
+            items = updatedItems,
         )
     }
 
-    private fun runTestAsync(initialRecyclables: List<Recyclable>, updatedRecyclables: List<Recyclable>) {
+    private fun runTestAsync(initialItems: List<ItemViewModel>, updatedItems: List<ItemViewModel>) {
         // Create blocked diff executor
         val diffExecutorBlocker = CountDownLatch(1)
         val diffExecutor: ExecutorService = Executors.newSingleThreadExecutor()
@@ -260,13 +260,13 @@ class DabirvaRecyclablesDiffingInstrumentedTest {
 
         // The initial insert happens synchronously (see AsyncListDiffer)
         adapter.data = adapter.data.copy(
-            recyclables = initialRecyclables,
+            items = initialItems,
         )
 
         adapter.registerAdapterDataObserver(adapterDataObserver)
         adapter.attachRecyclerView(recyclerView)
         adapter.data = adapter.data.copy(
-            recyclables = updatedRecyclables,
+            items = updatedItems,
         )
 
         verifyNoInteractions(adapterDataObserver)

@@ -8,14 +8,14 @@ class DataBindingViewHolder(
     private val binding: ViewDataBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val boundRecyclableRef: AtomicReference<Recyclable?> = AtomicReference()
+    private val boundViewModelRef: AtomicReference<ItemViewModel?> = AtomicReference()
 
-    val boundRecyclable: Recyclable?
-        get() = boundRecyclableRef.get()
+    val boundViewModel: ItemViewModel?
+        get() = boundViewModelRef.get()
 
-    fun bindItem(recyclable: Recyclable) {
-        if (boundRecyclableRef.compareAndSet(null, recyclable)) {
-            binding.setVariable(recyclable.bindingId, recyclable)
+    fun bindViewModel(viewModel: ItemViewModel) {
+        if (boundViewModelRef.compareAndSet(null, viewModel)) {
+            binding.setVariable(viewModel.bindingId, viewModel)
             binding.executePendingBindings()
         } else {
             throw IllegalStateException("Already bound")
@@ -23,7 +23,7 @@ class DataBindingViewHolder(
     }
 
     fun unbind() {
-        if (boundRecyclableRef.getAndSet(null) != null) {
+        if (boundViewModelRef.getAndSet(null) != null) {
             binding.unbind()
         }
     }

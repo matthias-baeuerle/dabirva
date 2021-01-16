@@ -42,24 +42,24 @@ class Dabirva(
 
     private fun onDataChanged(oldData: DabirvaData, newData: DabirvaData) {
         refreshItemsDiffer(newData.diffExecutor)
-        refreshItemsInAdapter(oldData.recyclables, newData.recyclables)
+        refreshItemsInAdapter(oldData.items, newData.items)
         attachedRecyclerView?.let { recyclerView: RecyclerView ->
-            refreshDecorationsInRecyclerView(recyclerView, newData.decorations)
+            refreshDecorationsInRecyclerView(recyclerView, newData.itemDecorations)
         }
     }
 
     override fun getItemCount(): Int {
-        return data.recyclables.size
+        return data.items.size
     }
 
     override fun getItemId(position: Int): Long {
-        val recyclable: Recyclable = data.recyclables[position]
-        return recyclable.id
+        val item: ItemViewModel = data.items[position]
+        return item.id
     }
 
     override fun getItemViewType(position: Int): Int {
-        val recyclable: Recyclable = data.recyclables[position]
-        return recyclable.layoutId
+        val item: ItemViewModel = data.items[position]
+        return item.layoutId
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBindingViewHolder {
@@ -69,8 +69,8 @@ class Dabirva(
     }
 
     override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int) {
-        val recyclable: Recyclable = data.recyclables[position]
-        holder.bindItem(recyclable)
+        val item: ItemViewModel = data.items[position]
+        holder.bindViewModel(item)
     }
 
     override fun onViewRecycled(holder: DataBindingViewHolder) {
@@ -81,7 +81,7 @@ class Dabirva(
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         attachRecyclerView(recyclerView)
-        refreshDecorationsInRecyclerView(recyclerView, data.decorations)
+        refreshDecorationsInRecyclerView(recyclerView, data.itemDecorations)
     }
 
     @VisibleForTesting
@@ -115,7 +115,7 @@ class Dabirva(
         }
     }
 
-    private fun refreshItemsInAdapter(oldItems: List<Recyclable>, newItems: List<Recyclable>) {
+    private fun refreshItemsInAdapter(oldItems: List<ItemViewModel>, newItems: List<ItemViewModel>) {
         val differ: AsyncListDiffer<Diffable>? = itemsDiffer
         if (differ != null) {
             differ.submitList(newItems)
@@ -124,7 +124,7 @@ class Dabirva(
         }
     }
 
-    private fun refreshItemsInAdapterSync(oldItems: List<Recyclable>, newItems: List<Recyclable>) {
+    private fun refreshItemsInAdapterSync(oldItems: List<ItemViewModel>, newItems: List<ItemViewModel>) {
         val diffCallback: DiffUtil.Callback = DiffableDiffUtilCallback(oldItems, newItems)
         val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(diffCallback)
         diffResult.dispatchUpdatesTo(this)

@@ -1,9 +1,9 @@
 package com.matbadev.dabirva
 
-data class TestRecyclable(
+data class TestItemViewModel(
     override val id: Long,
     val data: String? = null,
-) : Recyclable {
+) : ItemViewModel {
 
     override val layoutId: Int = 1
 

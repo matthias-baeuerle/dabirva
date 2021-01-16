@@ -6,7 +6,7 @@ import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.RecyclerView
 import com.matbadev.dabirva.Dabirva
 import com.matbadev.dabirva.DataBindingViewHolder
-import com.matbadev.dabirva.Recyclable
+import com.matbadev.dabirva.ItemViewModel
 import com.matbadev.dabirva.util.requireDabirva
 
 abstract class StickyHeaderDecoration(
@@ -19,15 +19,15 @@ abstract class StickyHeaderDecoration(
         if (parent.layoutManager == null) return
 
         val dabirva: Dabirva = parent.requireDabirva()
-        val headerRecyclable: Recyclable? = getHeaderRecyclable(parent, dabirva)
+        val headerViewModel: ItemViewModel? = getHeaderViewModel(parent, dabirva)
         var headerViewHolder: DataBindingViewHolder? = currentHeaderViewHolder
 
-        if (headerRecyclable != null) { // Header should be shown
+        if (headerViewModel != null) { // Header should be shown
             if (headerViewHolder != null) {
-                updateHeaderViewHolder(headerViewHolder, headerRecyclable)
+                updateHeaderViewHolder(headerViewHolder, headerViewModel)
             } else {
-                headerViewHolder = getOrCreateHeaderViewHolder(parent, dabirva, headerRecyclable.layoutId)
-                headerViewHolder.bindItem(headerRecyclable)
+                headerViewHolder = getOrCreateHeaderViewHolder(parent, dabirva, headerViewModel.layoutId)
+                headerViewHolder.bindViewModel(headerViewModel)
                 currentHeaderViewHolder = headerViewHolder
                 onBoundHeaderViewHolder(parent, state, dabirva, headerViewHolder)
             }
@@ -39,27 +39,27 @@ abstract class StickyHeaderDecoration(
         }
     }
 
-    private fun getHeaderRecyclable(parent: RecyclerView, dabirva: Dabirva): Recyclable? {
+    private fun getHeaderViewModel(parent: RecyclerView, dabirva: Dabirva): ItemViewModel? {
         val topChild: View = parent.getChildAt(0) ?: return null
 
         val topChildAdapterPosition: Int = parent.getChildAdapterPosition(topChild)
         if (topChildAdapterPosition == RecyclerView.NO_POSITION) return null
 
-        val recyclables: List<Recyclable> = dabirva.data.recyclables
+        val itemViewModels: List<ItemViewModel> = dabirva.data.items
         val headerAdapterPosition: Int =
-            headerPositionProvider.getHeaderPositionForItem(topChildAdapterPosition, recyclables)
+            headerPositionProvider.getHeaderPositionForItem(topChildAdapterPosition, itemViewModels)
         if (headerAdapterPosition == RecyclerView.NO_POSITION) return null
 
-        return recyclables[headerAdapterPosition]
+        return itemViewModels[headerAdapterPosition]
     }
 
-    private fun updateHeaderViewHolder(headerViewHolder: DataBindingViewHolder, headerRecyclable: Recyclable) {
-        val boundHeaderRecyclable: Recyclable? = headerViewHolder.boundRecyclable
-        if (boundHeaderRecyclable == null) {
-            headerViewHolder.bindItem(headerRecyclable)
-        } else if (boundHeaderRecyclable != headerRecyclable) {
+    private fun updateHeaderViewHolder(headerViewHolder: DataBindingViewHolder, headerViewModel: ItemViewModel) {
+        val boundHeaderItemViewModel: ItemViewModel? = headerViewHolder.boundViewModel
+        if (boundHeaderItemViewModel == null) {
+            headerViewHolder.bindViewModel(headerViewModel)
+        } else if (boundHeaderItemViewModel != headerViewModel) {
             headerViewHolder.unbind()
-            headerViewHolder.bindItem(headerRecyclable)
+            headerViewHolder.bindViewModel(headerViewModel)
         }
     }
 
