@@ -7,16 +7,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.matbadev.dabirva.Dabirva
 import com.matbadev.dabirva.DataBindingViewHolder
 import com.matbadev.dabirva.Recyclable
+import com.matbadev.dabirva.util.requireDabirva
 
 abstract class StickyHeaderDecoration(
     protected val headerPositionProvider: HeaderPositionProvider,
-) : DabirvaItemDecoration() {
+) : RecyclerView.ItemDecoration() {
 
     private var currentHeaderViewHolder: DataBindingViewHolder? = null
 
-    override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State, dabirva: Dabirva) {
+    override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         if (parent.layoutManager == null) return
 
+        val dabirva: Dabirva = parent.requireDabirva()
         val headerRecyclable: Recyclable? = getHeaderRecyclable(parent, dabirva)
         var headerViewHolder: DataBindingViewHolder? = currentHeaderViewHolder
 
