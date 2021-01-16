@@ -29,7 +29,7 @@ abstract class StickyHeaderDecoration(
                 headerViewHolder = getOrCreateHeaderViewHolder(parent, dabirva, headerRecyclable.layoutId)
                 headerViewHolder.bindItem(headerRecyclable)
                 currentHeaderViewHolder = headerViewHolder
-                onBoundHeaderViewHolder(parent, state, dabirva, headerViewHolder, headerRecyclable)
+                onBoundHeaderViewHolder(parent, state, dabirva, headerViewHolder)
             }
             onDrawHeaderOverItems(canvas, parent, state, dabirva, headerViewHolder)
         } else if (headerViewHolder != null) { // Existing header should not be shown
@@ -82,7 +82,6 @@ abstract class StickyHeaderDecoration(
         state: RecyclerView.State,
         dabirva: Dabirva,
         headerViewHolder: DataBindingViewHolder,
-        headerRecyclable: Recyclable,
     ) {
     }
 

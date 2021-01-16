@@ -17,9 +17,8 @@ class HorizontalStickyHeaderDecoration(
         state: RecyclerView.State,
         dabirva: Dabirva,
         headerViewHolder: DataBindingViewHolder,
-        headerRecyclable: Recyclable,
     ) {
-        super.onBoundHeaderViewHolder(parent, state, dabirva, headerViewHolder, headerRecyclable)
+        super.onBoundHeaderViewHolder(parent, state, dabirva, headerViewHolder)
         layoutHeaderView(parent, headerViewHolder.itemView)
     }
 
