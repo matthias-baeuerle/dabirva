@@ -3,9 +3,9 @@ package com.matbadev.dabirva.internal
 import androidx.recyclerview.widget.DiffUtil
 import com.matbadev.dabirva.Identifiable
 
-internal class IdentifiablesDiffUtilCallback<T : Identifiable>(
-    private val oldList: List<T>,
-    private val newList: List<T>,
+internal class IdentifiablesDiffUtilCallback(
+    private val oldList: List<Identifiable>,
+    private val newList: List<Identifiable>,
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int {
