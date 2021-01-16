@@ -3,7 +3,7 @@
 
     <string name="simple_title">SimpleListActivity</string>
 
-    <string name="stickyheader_title">StickyHeaderListActivity</string>
-    <string name="stickyheader_title_horizontal">StickyHeaderListActivity (horizontal)</string>
-    <string name="stickyheader_title_vertical">StickyHeaderListActivity (vertical)</string>
+    <string name="stickyheader_horizontal_title">HorizontalStickyHeaderListActivity</string>
+
+    <string name="stickyheader_vertical_title">VerticalStickyHeaderListActivity</string>
 </resources>

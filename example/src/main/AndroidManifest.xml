@@ -30,8 +30,12 @@
             android:label="@string/simple_title" />
 
         <activity
-            android:name=".ui.stickyheader.StickyHeaderListActivity"
-            android:label="@string/stickyheader_title" />
+            android:name=".ui.stickyheader.horizontal.HorizontalStickyHeaderListActivity"
+            android:label="@string/stickyheader_horizontal_title" />
+
+        <activity
+            android:name=".ui.stickyheader.vertical.VerticalStickyHeaderListActivity"
+            android:label="@string/stickyheader_vertical_title" />
 
     </application>
 

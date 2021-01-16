@@ -7,15 +7,15 @@
 
         <variable
             name="viewModel"
-            type="com.matbadev.dabirva.example.ui.stickyheader.StickyHeaderListViewModel" />
+            type="com.matbadev.dabirva.example.ui.stickyheader.horizontal.HorizontalStickyHeaderListViewModel" />
     </data>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:recyclerData="@{viewModel.recyclerData}"
-        app:linearOrientation="@{viewModel.recyclerOrientation}"
-        tools:listitem="@layout/item_note_row" />
+        tools:listitem="@layout/item_note_column" />
 
 </layout>
