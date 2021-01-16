@@ -1,3 +1,3 @@
 package com.matbadev.dabirva
 
-interface Recyclable : BindableLayout, Identifiable
+interface Recyclable : BindableLayout, Diffable

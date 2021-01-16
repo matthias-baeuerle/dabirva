@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.matbadev.dabirva.internal.ConfigAsyncListDiffer
-import com.matbadev.dabirva.internal.IdentifiablesDiffUtilCallback
-import com.matbadev.dabirva.internal.IdentifiablesDiffUtilItemCallback
+import com.matbadev.dabirva.internal.DiffableDiffUtilCallback
+import com.matbadev.dabirva.internal.DiffableDiffUtilItemCallback
 import com.matbadev.dabirva.internal.RecyclerViewDecorationUpdater
 import java.util.concurrent.Executor
 
@@ -31,7 +31,7 @@ class Dabirva(
 
     private val decorationUpdater = RecyclerViewDecorationUpdater()
 
-    private var itemsDiffer: ConfigAsyncListDiffer<Identifiable>? = null
+    private var itemsDiffer: ConfigAsyncListDiffer<Diffable>? = null
 
     private var attachedRecyclerView: RecyclerView? = null
 
@@ -103,11 +103,11 @@ class Dabirva(
         if (diffExecutor == null) {
             itemsDiffer = null
         } else {
-            val currentDiffConfig: AsyncDifferConfig<Identifiable>? = itemsDiffer?.config
+            val currentDiffConfig: AsyncDifferConfig<Diffable>? = itemsDiffer?.config
             if (currentDiffConfig?.backgroundThreadExecutor != diffExecutor) {
                 itemsDiffer = ConfigAsyncListDiffer(
                     AdapterListUpdateCallback(this),
-                    AsyncDifferConfig.Builder(IdentifiablesDiffUtilItemCallback())
+                    AsyncDifferConfig.Builder(DiffableDiffUtilItemCallback())
                         .setBackgroundThreadExecutor(diffExecutor)
                         .build(),
                 )
@@ -116,7 +116,7 @@ class Dabirva(
     }
 
     private fun refreshItemsInAdapter(oldItems: List<Recyclable>, newItems: List<Recyclable>) {
-        val differ: AsyncListDiffer<Identifiable>? = itemsDiffer
+        val differ: AsyncListDiffer<Diffable>? = itemsDiffer
         if (differ != null) {
             differ.submitList(newItems)
         } else {
@@ -125,7 +125,7 @@ class Dabirva(
     }
 
     private fun refreshItemsInAdapterSync(oldItems: List<Recyclable>, newItems: List<Recyclable>) {
-        val diffCallback: DiffUtil.Callback = IdentifiablesDiffUtilCallback(oldItems, newItems)
+        val diffCallback: DiffUtil.Callback = DiffableDiffUtilCallback(oldItems, newItems)
         val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(diffCallback)
         diffResult.dispatchUpdatesTo(this)
     }

@@ -1,6 +1,6 @@
 package com.matbadev.dabirva
 
-interface Identifiable {
+interface Diffable {
 
     val id: Long
 
