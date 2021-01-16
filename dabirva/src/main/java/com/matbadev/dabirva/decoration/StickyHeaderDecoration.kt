@@ -46,7 +46,8 @@ abstract class StickyHeaderDecoration(
         if (topChildAdapterPosition == RecyclerView.NO_POSITION) return null
 
         val recyclables: List<Recyclable> = dabirva.recyclerData.recyclables
-        val headerAdapterPosition: Int = headerPositionProvider.getHeaderPositionForItem(topChildAdapterPosition, recyclables)
+        val headerAdapterPosition: Int =
+            headerPositionProvider.getHeaderPositionForItem(topChildAdapterPosition, recyclables)
         if (headerAdapterPosition == RecyclerView.NO_POSITION) return null
 
         return recyclables[headerAdapterPosition]
