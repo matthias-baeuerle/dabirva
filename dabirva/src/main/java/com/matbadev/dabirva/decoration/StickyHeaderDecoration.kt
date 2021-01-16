@@ -63,7 +63,11 @@ abstract class StickyHeaderDecoration(
         }
     }
 
-    private fun getOrCreateHeaderViewHolder(parent: RecyclerView, dabirva: Dabirva, headerViewType: Int): DataBindingViewHolder {
+    private fun getOrCreateHeaderViewHolder(
+        parent: RecyclerView,
+        dabirva: Dabirva,
+        headerViewType: Int,
+    ): DataBindingViewHolder {
         val cachedHeaderViewHolder: RecyclerView.ViewHolder? = parent.recycledViewPool.getRecycledView(headerViewType)
         return if (cachedHeaderViewHolder != null) {
             cachedHeaderViewHolder as DataBindingViewHolder
@@ -73,9 +77,21 @@ abstract class StickyHeaderDecoration(
     }
 
     @CallSuper
-    protected open fun onBoundHeaderViewHolder(parent: RecyclerView, state: RecyclerView.State, dabirva: Dabirva, headerViewHolder: DataBindingViewHolder, headerRecyclable: Recyclable) {
+    protected open fun onBoundHeaderViewHolder(
+        parent: RecyclerView,
+        state: RecyclerView.State,
+        dabirva: Dabirva,
+        headerViewHolder: DataBindingViewHolder,
+        headerRecyclable: Recyclable,
+    ) {
     }
 
-    protected abstract fun onDrawHeaderOverItems(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State, dabirva: Dabirva, headerViewHolder: DataBindingViewHolder)
+    protected abstract fun onDrawHeaderOverItems(
+        canvas: Canvas,
+        parent: RecyclerView,
+        state: RecyclerView.State,
+        dabirva: Dabirva,
+        headerViewHolder: DataBindingViewHolder,
+    )
 
 }

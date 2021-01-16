@@ -5,13 +5,14 @@ import com.matbadev.dabirva.example.base.BaseScreenViewModel
 import com.matbadev.dabirva.example.data.Note
 import com.matbadev.dabirva.example.data.NoteRepository
 import com.matbadev.dabirva.example.ui.NoteViewModel
-import com.matbadev.dabirva.util.NonNullObservableField
 
 class SimpleListActivityViewModel(
     private val noteRepository: NoteRepository,
 ) : BaseScreenViewModel<SimpleListActivityEvent, SimpleListActivityArguments>() {
 
-    val recyclerData = NonNullObservableField(
+    lateinit var recyclerData: RecyclerData
+
+    override fun initWithArguments(arguments: SimpleListActivityArguments?) {
         RecyclerData(
             recyclables = noteRepository.getNotes().map { note: Note ->
                 NoteViewModel(
@@ -21,6 +22,6 @@ class SimpleListActivityViewModel(
                 )
             },
         )
-    )
+    }
 
 }

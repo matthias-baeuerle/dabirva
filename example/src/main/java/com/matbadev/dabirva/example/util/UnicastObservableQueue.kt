@@ -2,7 +2,7 @@ package com.matbadev.dabirva.example.util
 
 import androidx.annotation.AnyThread
 import androidx.annotation.MainThread
-import java.util.*
+import java.util.Collections
 
 class UnicastObservableQueue<E> {
 

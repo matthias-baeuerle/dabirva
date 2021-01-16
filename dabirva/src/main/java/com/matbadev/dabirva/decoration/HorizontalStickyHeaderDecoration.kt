@@ -12,7 +12,13 @@ class HorizontalStickyHeaderDecoration(
     headerPositionProvider: HeaderPositionProvider,
 ) : StickyHeaderDecoration(headerPositionProvider) {
 
-    override fun onBoundHeaderViewHolder(parent: RecyclerView, state: RecyclerView.State, dabirva: Dabirva, headerViewHolder: DataBindingViewHolder, headerRecyclable: Recyclable) {
+    override fun onBoundHeaderViewHolder(
+        parent: RecyclerView,
+        state: RecyclerView.State,
+        dabirva: Dabirva,
+        headerViewHolder: DataBindingViewHolder,
+        headerRecyclable: Recyclable,
+    ) {
         super.onBoundHeaderViewHolder(parent, state, dabirva, headerViewHolder, headerRecyclable)
         layoutHeaderView(parent, headerViewHolder.itemView)
     }
@@ -24,12 +30,12 @@ class HorizontalStickyHeaderDecoration(
         val childWidthSpec = ViewGroup.getChildMeasureSpec(
             widthSpec,
             parent.paddingLeft + parent.paddingRight,
-            headerView.layoutParams.width
+            headerView.layoutParams.width,
         )
         val childHeightSpec = ViewGroup.getChildMeasureSpec(
             heightSpec,
             parent.paddingTop + parent.paddingBottom,
-            headerView.layoutParams.height
+            headerView.layoutParams.height,
         )
 
         headerView.measure(childWidthSpec, childHeightSpec)
@@ -37,7 +43,13 @@ class HorizontalStickyHeaderDecoration(
         headerView.layout(0, 0, headerView.measuredWidth, headerView.measuredHeight)
     }
 
-    override fun onDrawHeaderOverItems(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State, dabirva: Dabirva, headerViewHolder: DataBindingViewHolder) {
+    override fun onDrawHeaderOverItems(
+        canvas: Canvas,
+        parent: RecyclerView,
+        state: RecyclerView.State,
+        dabirva: Dabirva,
+        headerViewHolder: DataBindingViewHolder,
+    ) {
         val headerView: View = headerViewHolder.itemView
         val childInContact: View? = getChildInContact(parent, headerView.right)
         canvas.save()

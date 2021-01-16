@@ -25,7 +25,7 @@ class VerticalStickyHeaderListViewModel(
                 .flatMap { noteEntry -> buildVerticalGroupViewModels(noteEntry) },
             decorations = listOf(
                 VerticalStickyHeaderDecoration(
-                    headerPositionProvider = ItemHeaderProvider { it is HeaderRowViewModel }
+                    headerPositionProvider = ItemHeaderProvider { it is HeaderRowViewModel },
                 ),
             ),
         )
@@ -33,20 +33,16 @@ class VerticalStickyHeaderListViewModel(
 
     private fun buildVerticalGroupViewModels(noteEntry: Map.Entry<NotePriority, List<Note>>): Sequence<Recyclable> {
         return sequence {
-            yield(
-                HeaderRowViewModel(
-                    id = noteEntry.key.ordinal.toLong(),
-                    text = noteEntry.key.name,
-                )
-            )
+            yield(HeaderRowViewModel(
+                id = noteEntry.key.ordinal.toLong(),
+                text = noteEntry.key.name,
+            ))
             noteEntry.value.forEach { note: Note ->
-                yield(
-                    NoteRowViewModel(
-                        id = note.id,
-                        text = note.text,
-                        color = note.color,
-                    )
-                )
+                yield(NoteRowViewModel(
+                    id = note.id,
+                    text = note.text,
+                    color = note.color,
+                ))
             }
         }
     }

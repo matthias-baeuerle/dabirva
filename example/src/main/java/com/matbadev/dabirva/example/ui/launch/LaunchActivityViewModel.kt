@@ -24,7 +24,7 @@ class LaunchActivityViewModel : BaseScreenViewModel<LaunchActivityEvent, LaunchA
 
     private fun startActivity(activityClass: KClass<out Activity>) {
         queueCommonUiEvent(
-            StartActivityEvent(activityClass)
+            StartActivityEvent(activityClass),
         )
     }
 

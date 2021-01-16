@@ -107,7 +107,7 @@ class Dabirva(
                     AdapterListUpdateCallback(this),
                     AsyncDifferConfig.Builder(IdentifiablesDiffUtilItemCallback())
                         .setBackgroundThreadExecutor(diffExecutor)
-                        .build()
+                        .build(),
                 )
             }
         }
@@ -128,7 +128,10 @@ class Dabirva(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun refreshDecorationsInRecyclerView(recyclerView: RecyclerView, newDecorations: List<RecyclerView.ItemDecoration>) {
+    private fun refreshDecorationsInRecyclerView(
+        recyclerView: RecyclerView,
+        newDecorations: List<RecyclerView.ItemDecoration>,
+    ) {
         decorationUpdater.updateDecorations(recyclerView, newDecorations)
     }
 
