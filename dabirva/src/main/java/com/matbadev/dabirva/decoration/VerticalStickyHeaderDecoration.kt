@@ -71,9 +71,9 @@ class VerticalStickyHeaderDecoration(
         return null
     }
 
-    private fun isItemSticky(parent: RecyclerView, itemViewModels: List<ItemViewModel>, itemView: View): Boolean {
+    private fun isItemSticky(parent: RecyclerView, items: List<ItemViewModel>, itemView: View): Boolean {
         val adapterPosition: Int = parent.getChildAdapterPosition(itemView)
-        return headerPositionProvider.getHeaderPositionForItem(adapterPosition, itemViewModels) == adapterPosition
+        return headerPositionProvider.getHeaderPositionForItem(adapterPosition, items) == adapterPosition
     }
 
 }
