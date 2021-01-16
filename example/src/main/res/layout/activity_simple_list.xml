@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.matbadev.dabirva.example.ui.simple.SimpleListViewModel" />
+            type="com.matbadev.dabirva.example.ui.simple.SimpleListActivityViewModel" />
     </data>
 
     <androidx.recyclerview.widget.RecyclerView

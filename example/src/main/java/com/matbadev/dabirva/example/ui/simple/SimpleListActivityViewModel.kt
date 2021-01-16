@@ -7,9 +7,9 @@ import com.matbadev.dabirva.example.data.NoteRepository
 import com.matbadev.dabirva.example.ui.NoteViewModel
 import com.matbadev.dabirva.util.NonNullObservableField
 
-class SimpleListViewModel(
+class SimpleListActivityViewModel(
     private val noteRepository: NoteRepository,
-) : BaseScreenViewModel<SimpleListEvent, SimpleListActivityArguments>() {
+) : BaseScreenViewModel<SimpleListActivityEvent, SimpleListActivityArguments>() {
 
     val recyclerData = NonNullObservableField(
         RecyclerData(
