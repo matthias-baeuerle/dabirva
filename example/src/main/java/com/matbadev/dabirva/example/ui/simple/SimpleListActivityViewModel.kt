@@ -13,7 +13,8 @@ class SimpleListActivityViewModel(
     lateinit var dabirvaData: DabirvaData
 
     override fun initWithArguments(arguments: SimpleListActivityArguments?) {
-        DabirvaData(
+        super.initWithArguments(arguments)
+        dabirvaData = DabirvaData(
             items = noteRepository.getNotes().map { note: Note ->
                 NoteViewModel(
                     id = note.id,
