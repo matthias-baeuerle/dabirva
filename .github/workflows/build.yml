@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  build:
-    name: Build
+  build-and-test:
+    name: Build and test
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -24,19 +24,9 @@ jobs:
       - name: Assemble release using Gradle
         run: ./gradlew dabirva:assembleRelease --console=plain --full-stacktrace
 
-  test:
-    name: Test
-    runs-on: ubuntu-20.04
-    needs: build
-    steps:
       - name: Run unit tests with coverage using Gradle
         run: ./gradlew dabirva:jacocoTestReportRelease --console=plain --full-stacktrace
 
-  publish-test-results:
-    name: Publish test results
-    runs-on: ubuntu-20.04
-    needs: test
-    steps:
       - name: Publish unit test results to GitHub
         uses: EnricoMi/publish-unit-test-result-action@v1.7
         if: always()
