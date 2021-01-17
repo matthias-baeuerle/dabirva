@@ -19,7 +19,6 @@ class SimpleListActivityViewModel(
                 NoteViewModel(
                     id = note.id,
                     text = note.text,
-                    color = note.color,
                 )
             },
         )
