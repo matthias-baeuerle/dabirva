@@ -6,20 +6,37 @@ on:
       - master
 
 jobs:
-  build:
+  build-and-test:
+    name: Build and test
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Setup JDK 8
         uses: actions/setup-java@v1
         with:
           java-version: 8
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
       - name: Gradle build with test coverage
         run: ./gradlew dabirva:jacocoTestReportRelease --console=plain --full-stacktrace
-      - name: Upload code coverage results to codecov
+
+  publish-test-results:
+    name: Publish test results
+    runs-on: ubuntu-20.04
+    needs: build-and-test
+    steps:
+      - name: Publish unit test results to GitHub
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: ./dabirva/build/test-results/**/*.xml
+
+      - name: Publish code coverage results to codecov
         uses: codecov/codecov-action@v1
         with:
           directory: ./dabirva/build/reports/jacoco/
