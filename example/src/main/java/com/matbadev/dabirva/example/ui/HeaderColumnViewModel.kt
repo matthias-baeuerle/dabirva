@@ -1,16 +1,13 @@
 package com.matbadev.dabirva.example.ui
 
-import com.matbadev.dabirva.ItemViewModel
-import com.matbadev.dabirva.example.BR
 import com.matbadev.dabirva.example.R
+import com.matbadev.dabirva.example.base.BaseItemViewModel
 
 data class HeaderColumnViewModel(
     override val id: Long,
     val text: String,
-) : ItemViewModel {
+) : BaseItemViewModel() {
 
     override val layoutId: Int = R.layout.item_header_column
-
-    override val bindingId: Int = BR.viewModel
 
 }

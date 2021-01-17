@@ -1,20 +1,17 @@
 package com.matbadev.dabirva.example.ui
 
 import android.view.View
-import com.matbadev.dabirva.ItemViewModel
-import com.matbadev.dabirva.example.BR
 import com.matbadev.dabirva.example.R
+import com.matbadev.dabirva.example.base.BaseItemViewModel
 
 data class ClickableNoteViewModel(
     override val id: Long,
     val text: String,
     val onItemClick: (item: ClickableNoteViewModel) -> Unit,
     val onItemLongClick: (item: ClickableNoteViewModel) -> Boolean,
-) : ItemViewModel, View.OnClickListener, View.OnLongClickListener {
+) : BaseItemViewModel(), View.OnClickListener, View.OnLongClickListener {
 
     override val layoutId: Int = R.layout.item_note_clickable
-
-    override val bindingId: Int = BR.viewModel
 
     override fun onClick(view: View) {
         onItemClick(this)
