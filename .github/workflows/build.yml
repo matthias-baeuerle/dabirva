@@ -1,9 +1,6 @@
 name: Build master
 
-on:
-  push:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   build-and-test:
@@ -24,18 +21,24 @@ jobs:
       - name: Assemble release using Gradle
         run: ./gradlew dabirva:assembleRelease --console=plain --full-stacktrace
 
-      - name: Run unit tests with coverage using Gradle
-        run: ./gradlew dabirva:jacocoTestReportRelease --console=plain --full-stacktrace
+#      - name: Run unit tests with coverage using Gradle
+#        run: ./gradlew dabirva:jacocoTestReportRelease --console=plain --full-stacktrace
 
-      - name: Publish unit test results to GitHub
-        uses: EnricoMi/publish-unit-test-result-action@v1.7
-        if: always()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: ./dabirva/build/test-results/**/*.xml
+#      - name: Publish unit test results to GitHub
+#        uses: EnricoMi/publish-unit-test-result-action@v1.7
+#        if: always()
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          files: ./dabirva/build/test-results/**/*.xml
 
-      - name: Publish code coverage results to codecov
-        uses: codecov/codecov-action@v1
-        with:
-          directory: ./dabirva/build/reports/jacoco/
-          fail_ci_if_error: true
+#      - name: Publish code coverage results to codecov
+#        uses: codecov/codecov-action@v1
+#        with:
+#          directory: ./dabirva/build/reports/jacoco/
+#          fail_ci_if_error: true
+
+      - name: Run integration tests
+          uses: reactivecircus/android-emulator-runner@v2
+          with:
+            api-level: 30
+            script: ./gradlew dabirva:connectedAndroidTest --console=plain --full-stacktrace
