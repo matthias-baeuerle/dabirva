@@ -34,10 +34,10 @@ jobs:
           script: ./gradlew dabirva:connectedReleaseAndroidTest --console=plain --full-stacktrace -Pci
 
       - name: Merge coverage reports
-        run: ./gradlew dabirva:newMergeTestReports --console=plain --full-stacktrace -Pci
+        run: ./gradlew dabirva:mergeJacocoReports --console=plain --full-stacktrace -Pci
 
-      - name: Merge test results
-        run: cd dabirva/build/ && mkdir -v _test-results && mv -v test-results _test-results/ && mv -v outputs/androidTest-results _test-results/
+#      - name: Merge test results
+#        run: cd dabirva/build/ && mkdir -v _test-results && mv -v test-results _test-results/ && mv -v outputs/androidTest-results _test-results/
 
       # https://github.com/marketplace/actions/publish-unit-test-results
 #      - name: Publish test results to GitHub
@@ -47,16 +47,16 @@ jobs:
 #          github_token: ${{ secrets.GITHUB_TOKEN }}
 #          files: ./dabirva/build/_test-results/**/*.xml
 
-      - name: Publish Test Report
-        uses: scacap/action-surefire-report@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          report_paths: ./dabirva/build/_test-results/**/*.xml
-          fail_on_test_failures: true
+#      - name: Publish Test Report
+#        uses: scacap/action-surefire-report@v1
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          report_paths: ./dabirva/build/_test-results/**/*.xml
+#          fail_on_test_failures: true
 
       # https://github.com/marketplace/actions/codecov
       - name: Publish test coverage to codecov
         uses: codecov/codecov-action@v1
         with:
-          directory: ./dabirva/build/reports/jacoco/newMergeTestReports/
+          directory: ./dabirva/build/reports/jacoco/mergeJacocoReports/
           fail_ci_if_error: true
