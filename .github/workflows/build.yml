@@ -1,6 +1,6 @@
 name: Build master
 
-on: [push, pull_request]
+on: push
 
 jobs:
   build-and-test:
@@ -19,16 +19,16 @@ jobs:
         run: chmod +x gradlew
 
       - name: Assemble release using Gradle
-        run: ./gradlew dabirva:assembleRelease --console=plain --full-stacktrace
+        run: ./gradlew dabirva:assembleRelease --console=plain --full-stacktrace -Pci
 
       - name: Run unit tests with coverage using Gradle
-        run: ./gradlew dabirva:jacocoTestReportRelease --console=plain --full-stacktrace
+        run: ./gradlew dabirva:jacocoTestReportRelease --console=plain --full-stacktrace -Pci
 
       - name: Run instrumented tests with coverage using Gradle
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew dabirva:connectedReleaseAndroidTest --console=plain --full-stacktrace
+          script: ./gradlew dabirva:connectedReleaseAndroidTest --console=plain --full-stacktrace -Pci
 
       - name: Merge test results
         run: cd dabirva/build/ && mkdir -v _test-results && mv -v test-results _test-results/ && mv -v outputs/androidTest-results _test-results/
