@@ -6,7 +6,7 @@ on:
       develop
 
 env:
-  GRADLE_OPTS: --console=plain --full-stacktrace -Pci
+  GRADLEW_ARGUMENTS: "--console=plain --full-stacktrace -Pci"
 
 jobs:
   build-and-test:
@@ -30,23 +30,23 @@ jobs:
         run: chmod +x gradlew
 
       - name: Assemble release using Gradle
-        run: ./gradlew dabirva:assembleRelease
+        run: ./gradlew dabirva:assembleRelease $GRADLEW_ARGUMENTS
 
       - name: Run unit tests with coverage using Gradle
-        run: ./gradlew dabirva:jacocoTestReportRelease
+        run: ./gradlew dabirva:jacocoTestReportRelease $GRADLEW_ARGUMENTS
 
       # https://github.com/marketplace/actions/android-emulator-runner
       - name: Run instrumented tests with coverage using Gradle
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew dabirva:connectedReleaseAndroidTest
+          script: ./gradlew dabirva:connectedReleaseAndroidTest $GRADLEW_ARGUMENTS
 
       - name: Merge test result reports
         run: cd dabirva/build/ && mkdir -v _test-results && mv -v test-results _test-results/ && mv -v outputs/androidTest-results _test-results/
 
       - name: Merge test coverage reports
-        run: ./gradlew dabirva:mergeJacocoReports
+        run: ./gradlew dabirva:mergeJacocoReports $GRADLEW_ARGUMENTS
 
       # https://github.com/marketplace/actions/surefire-report
       - name: Publish Test Report
