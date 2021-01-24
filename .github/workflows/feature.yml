@@ -6,7 +6,7 @@ on:
       develop
 
 env:
-  GRADLE_OPTS: "--console=plain --full-stacktrace -Pci"
+  GRADLE_OPTS: --console=plain --full-stacktrace -Pci
 
 jobs:
   build-and-test:
