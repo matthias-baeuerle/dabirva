@@ -24,6 +24,7 @@ android {
 
     buildTypes {
         debug {
+            testCoverageEnabled true
         }
         release {
             minifyEnabled false
@@ -65,4 +66,37 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:1.1.2"
     androidTestImplementation "androidx.test.espresso:espresso-core:3.3.0"
     androidTestImplementation "org.mockito:mockito-android:3.7.7"
+}
+
+//task mergeTestReports(type: JacocoReport, dependsOn: ["jacocoTestReportRelease", "connectedReleaseAndroidTest"]) {
+task mergeTestReports(type: JacocoReport) {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        csv.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    print(mainSrc)
+    sourceDirectories.from(mainSrc)
+    classDirectories.from(debugTree)
+    executionData.from(fileTree(dir: "$buildDir", includes: [
+            "${buildDir}/jacoco/testReleaseUnitTest.exec",
+            "${buildDir}/outputs/code_coverage/releaseAndroidTest/connected/*coverage.ec"
+    ]))
+}
+
+task mergeJacocoReport(type: org.gradle.testing.jacoco.tasks.JacocoMerge) {
+    group "Jacoco Report"
+    description "Merge Jacoco Code Coverage Report"
+
+    def executionFiles = fileTree(dir: "$buildDir", includes: [
+            "jacoco/testReleaseUnitTest.exec",
+            "outputs/code_coverage/releaseAndroidTest/connected/*coverage.ec"
+    ])
+
+    setExecutionData(executionFiles)
 }

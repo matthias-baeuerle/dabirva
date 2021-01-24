@@ -33,6 +33,9 @@ jobs:
           api-level: 29
           script: ./gradlew dabirva:connectedReleaseAndroidTest --console=plain --full-stacktrace -Pci
 
+      - name: Merge coverage reports
+        run: ./gradlew dabirva:mergeJacocoReport --console=plain --full-stacktrace -Pci
+
       - name: Merge test results
         run: cd dabirva/build/ && mkdir -v _test-results && mv -v test-results _test-results/ && mv -v outputs/androidTest-results _test-results/
 
@@ -58,5 +61,5 @@ jobs:
       - name: Publish test coverage to codecov
         uses: codecov/codecov-action@v1
         with:
-          directory: ./dabirva/build/jacoco/
+          files: ./dabirva/build/jacoco/mergeJacocoReport.exec
           fail_ci_if_error: true
