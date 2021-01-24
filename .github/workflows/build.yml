@@ -37,12 +37,19 @@ jobs:
         run: cd dabirva/build/ && mkdir -v _test-coverage && mv -v jacoco _test-coverage/ && mv -v outputs/code_coverage _test-coverage/
 
       # https://github.com/marketplace/actions/publish-unit-test-results
-      - name: Publish test results to GitHub
-        uses: EnricoMi/publish-unit-test-result-action@v1.7
-        if: always()
+#      - name: Publish test results to GitHub
+#        uses: EnricoMi/publish-unit-test-result-action@v1.7
+#        if: always()
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          files: ./dabirva/build/_test-results/**/*.xml
+
+      - name: Publish Test Report
+        uses: scacap/action-surefire-report@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: ./dabirva/build/_test-results/**/*.xml
+          report_paths: ./dabirva/build/_test-results/**/*.xml
+          fail_on_test_failures: true
 
       # https://github.com/marketplace/actions/codecov
       - name: Publish test coverage to codecov
