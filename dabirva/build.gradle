@@ -100,3 +100,17 @@ task mergeJacocoReport(type: org.gradle.testing.jacoco.tasks.JacocoMerge) {
 
     setExecutionData(executionFiles)
 }
+
+task newMergeTestReports(type: JacocoReport) {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        csv.enabled = true
+    }
+    def executionFiles = fileTree(dir: "$buildDir", includes: [
+            "jacoco/testReleaseUnitTest.exec",
+            "outputs/code_coverage/releaseAndroidTest/connected/*coverage.ec"
+    ])
+
+    executionData.setFrom(executionFiles)
+}
