@@ -10,7 +10,6 @@ import com.matbadev.dabirva.TestItemViewModels.B
 import com.matbadev.dabirva.TestItemViewModels.C
 import com.matbadev.dabirva.TestItemViewModels.D
 import com.matbadev.dabirva.TestItemViewModels.E
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -191,13 +190,11 @@ class DabirvaItemsDiffingInstrumentedTest {
     }
 
     @Test
-    @Ignore
     fun moveMultipleSync() {
         moveMultiple(DiffExecutorMode.SYNC)
     }
 
     @Test
-    @Ignore
     fun moveMultipleAsync() {
         moveMultiple(DiffExecutorMode.ASYNC)
     }
@@ -275,7 +272,7 @@ class DabirvaItemsDiffingInstrumentedTest {
         diffExecutorBlocker.countDown()
 
         // Wait for async diffing to start
-        Thread.sleep(10)
+        Thread.sleep(100)
 
         // Wait for async diffing to complete
         diffExecutor.submit { }.get(10, TimeUnit.SECONDS)
