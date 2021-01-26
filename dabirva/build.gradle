@@ -80,18 +80,16 @@ task mergeJacocoReports(type: JacocoReport) {
 
     reports {
         xml.enabled = true
-        html.enabled = true
-        csv.enabled = true
+        html.enabled = false
+        csv.enabled = false
     }
 
-    def debugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/release")
-    def mainSrc = "${project.projectDir}/src/main/java"
-
-    sourceDirectories.setFrom(mainSrc)
-    classDirectories.setFrom(debugTree)
-    def executionFiles = fileTree(dir: project.projectDir, includes: [
-            "jacoco.exec",
-            "build/outputs/code_coverage/**/*.ec"
+    sourceDirectories.setFrom "${project.projectDir}/src/main/java"
+    classDirectories.setFrom "${buildDir}/tmp/kotlin-classes/release"
+    executionData.setFrom fileTree(dir: project.projectDir, includes: [
+            // Unit tests coverage
+            "*.exec",
+            // Instrumented tests coverage
+            "build/outputs/code_coverage/**/*.ec",
     ])
-    executionData.setFrom(executionFiles)
 }
