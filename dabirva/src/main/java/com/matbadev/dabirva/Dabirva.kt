@@ -6,7 +6,6 @@ import androidx.annotation.VisibleForTesting
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.AdapterListUpdateCallback
-import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -35,11 +34,11 @@ class Dabirva(
 
     init {
         setHasStableIds(true)
-        refreshItemsDiffer(initialData.diffExecutor)
+        refreshItemsDiffer(null, initialData.diffExecutor)
     }
 
     private fun onDataChanged(oldData: DabirvaData, newData: DabirvaData) {
-        refreshItemsDiffer(newData.diffExecutor)
+        refreshItemsDiffer(oldData.diffExecutor, newData.diffExecutor)
         refreshItemsInAdapter(oldData.items, newData.items)
         attachedRecyclerView?.let { recyclerView: RecyclerView ->
             refreshDecorationsInRecyclerView(recyclerView, newData.itemDecorations)
@@ -97,18 +96,16 @@ class Dabirva(
         attachedRecyclerView = null
     }
 
-    private fun refreshItemsDiffer(diffExecutor: Executor?) {
-        if (diffExecutor == null) {
-            itemsDiffer = null
-        } else {
-            val currentDiffConfig: AsyncDifferConfig<Diffable>? = itemsDiffer?.config
-            if (currentDiffConfig?.backgroundThreadExecutor != diffExecutor) {
+    private fun refreshItemsDiffer(oldDiffExecutor: Executor?, newDiffExecutor: Executor?) {
+        if (oldDiffExecutor != newDiffExecutor) {
+            if (newDiffExecutor != null) {
                 itemsDiffer = ConfigAsyncListDiffer(
                     AdapterListUpdateCallback(this),
-                    AsyncDifferConfig.Builder(DiffableDiffUtilItemCallback())
-                        .setBackgroundThreadExecutor(diffExecutor)
-                        .build(),
+                    DiffableDiffUtilItemCallback(),
+                    newDiffExecutor,
                 )
+            } else {
+                itemsDiffer = null
             }
         }
     }
