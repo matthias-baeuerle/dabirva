@@ -113,6 +113,12 @@ class Dabirva(
         }
     }
 
+    @VisibleForTesting
+    fun setItemsDifferMainThreadExecutor(mainThreadExecutor: Executor) {
+        val currentItemsDiffer: ConfigAsyncListDiffer<Diffable> = itemsDiffer ?: throw IllegalStateException()
+        currentItemsDiffer.mainThreadExecutor = mainThreadExecutor
+    }
+
     private fun refreshItemsInAdapter(oldItems: List<ItemViewModel>, newItems: List<ItemViewModel>) {
         val differ: AsyncListDiffer<Diffable>? = itemsDiffer
         if (differ != null) {

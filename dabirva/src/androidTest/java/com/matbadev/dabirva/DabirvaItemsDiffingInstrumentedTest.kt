@@ -10,21 +10,17 @@ import com.matbadev.dabirva.TestItemViewModels.B
 import com.matbadev.dabirva.TestItemViewModels.C
 import com.matbadev.dabirva.TestItemViewModels.D
 import com.matbadev.dabirva.TestItemViewModels.E
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.verify
-import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
 import org.mockito.quality.Strictness
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class DabirvaItemsDiffingInstrumentedTest {
@@ -241,13 +237,7 @@ class DabirvaItemsDiffingInstrumentedTest {
     }
 
     private fun runTestAsync(initialItems: List<ItemViewModel>, updatedItems: List<ItemViewModel>) {
-        // Create blocked diff executor
-        val diffExecutorBlocker = CountDownLatch(1)
-        val diffExecutor: ExecutorService = Executors.newSingleThreadExecutor()
-        diffExecutor.submit {
-            diffExecutorBlocker.await()
-        }
-
+        val diffExecutor = TrampolineExecutor()
         val recyclerView = RecyclerView(context)
         val adapter = Dabirva(
             initialData = DabirvaData(
@@ -255,27 +245,24 @@ class DabirvaItemsDiffingInstrumentedTest {
             ),
         )
 
-        // The initial insert happens synchronously (see AsyncListDiffer)
+        // AsyncListDiffer uses main looper to get back to the main thread which causes race conditions in tests
+        // which is why the same executor needs to be used here.
+        adapter.setItemsDifferMainThreadExecutor(diffExecutor)
+
+        // The initial insert happens synchronously.
         adapter.data = adapter.data.copy(
             items = initialItems,
         )
+        assertEquals(0, diffExecutor.executedCommandsCount)
 
+        // Subsequent inserts happen asynchronously,
+        // one call to diffExecutor for changing to the worker thread and another one to change back to the main thread.
         adapter.registerAdapterDataObserver(adapterDataObserver)
         adapter.attachRecyclerView(recyclerView)
         adapter.data = adapter.data.copy(
             items = updatedItems,
         )
-
-        verifyNoInteractions(adapterDataObserver)
-
-        // Unblock diff executor which starts async diffing
-        diffExecutorBlocker.countDown()
-
-        // Wait for async diffing to start
-        Thread.sleep(10)
-
-        // Wait for async diffing to complete
-        diffExecutor.submit { }.get(10, TimeUnit.SECONDS)
+        assertEquals(2, diffExecutor.executedCommandsCount)
     }
 
 }
