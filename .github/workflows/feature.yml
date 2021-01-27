@@ -29,8 +29,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Assemble release using Gradle
-        run: ./gradlew dabirva:assembleRelease $GRADLEW_ARGUMENTS
+      - name: Bundle AAR using Gradle
+        run: ./gradlew dabirva:bundleReleaseAar $GRADLEW_ARGUMENTS
+
+      - name: Run Android lint
+        run: ./gradlew dabirva:lintRelease $GRADLEW_ARGUMENTS
 
       - name: Run unit tests with coverage using Gradle
         run: ./gradlew dabirva:jacocoTestReportRelease $GRADLEW_ARGUMENTS
@@ -42,18 +45,15 @@ jobs:
           api-level: 29
           script: ./gradlew dabirva:connectedReleaseAndroidTest $GRADLEW_ARGUMENTS
 
-      - name: Merge test result reports
-        run: cd dabirva/build/ && mkdir -v _test-results && mv -v test-results _test-results/ && mv -v outputs/androidTest-results _test-results/
-
       - name: Merge test coverage reports
         run: ./gradlew dabirva:mergeJacocoReports $GRADLEW_ARGUMENTS
 
       # https://github.com/marketplace/actions/surefire-report
-      - name: Publish Test Report
+      - name: Publish test results to GitHub
         uses: scacap/action-surefire-report@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          report_paths: ./dabirva/build/_test-results/**/*.xml
+          report_paths: ./dabirva/build/test-results/**/*.xml
           fail_on_test_failures: true
 
       # https://github.com/marketplace/actions/codecov
