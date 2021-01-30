@@ -13,6 +13,7 @@ import com.matbadev.dabirva.internal.ConfigAsyncListDiffer
 import com.matbadev.dabirva.internal.DiffableDiffUtilCallback
 import com.matbadev.dabirva.internal.DiffableDiffUtilItemCallback
 import com.matbadev.dabirva.internal.RecyclerViewDecorationUpdater
+import java.lang.reflect.Field
 import java.util.concurrent.Executor
 
 class Dabirva(
@@ -82,7 +83,7 @@ class Dabirva(
     }
 
     @VisibleForTesting
-    fun attachRecyclerView(recyclerView: RecyclerView) {
+    internal fun attachRecyclerView(recyclerView: RecyclerView) {
         attachedRecyclerView = recyclerView
     }
 
@@ -92,28 +93,38 @@ class Dabirva(
     }
 
     @VisibleForTesting
-    fun detachRecyclerView() {
+    internal fun detachRecyclerView() {
         attachedRecyclerView = null
     }
 
     private fun refreshItemsDiffer(oldDiffExecutor: Executor?, newDiffExecutor: Executor?) {
         if (oldDiffExecutor != newDiffExecutor) {
-            if (newDiffExecutor != null) {
-                itemsDiffer = ConfigAsyncListDiffer(
+            itemsDiffer = if (newDiffExecutor != null) {
+                ConfigAsyncListDiffer(
                     AdapterListUpdateCallback(this),
                     DiffableDiffUtilItemCallback(),
                     newDiffExecutor,
                 )
             } else {
-                itemsDiffer = null
+                null
             }
         }
     }
 
+    /**
+     * Use reflection to change the executor which [AsyncListDiffer] uses to return the async diffing results.
+     *
+     * By default [AsyncListDiffer] uses [android.os.Looper.getMainLooper] for this
+     * which can cause race conditions in tests as it queues a task for the next loop
+     * instead of dispatching it immediately.
+     */
     @VisibleForTesting
-    fun setItemsDifferMainThreadExecutor(mainThreadExecutor: Executor) {
-        val currentItemsDiffer: ConfigAsyncListDiffer<Diffable> = itemsDiffer ?: throw IllegalStateException()
-        currentItemsDiffer.mainThreadExecutor = mainThreadExecutor
+    internal fun setItemsDifferMainThreadExecutor(mainThreadExecutor: Executor) {
+        val currentItemsDiffer: ConfigAsyncListDiffer<Diffable> =
+            itemsDiffer ?: throw IllegalStateException("No items differ set")
+        val mainThreadExecutorField: Field = AsyncListDiffer::class.java.getDeclaredField("mMainThreadExecutor")
+        mainThreadExecutorField.isAccessible = true
+        mainThreadExecutorField.set(currentItemsDiffer, mainThreadExecutor)
     }
 
     private fun refreshItemsInAdapter(oldItems: List<ItemViewModel>, newItems: List<ItemViewModel>) {

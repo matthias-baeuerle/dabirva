@@ -245,8 +245,6 @@ class DabirvaItemsDiffingInstrumentedTest {
             ),
         )
 
-        // AsyncListDiffer uses main looper to get back to the main thread which causes race conditions in tests
-        // which is why the same executor needs to be used here.
         adapter.setItemsDifferMainThreadExecutor(diffExecutor)
 
         // The initial insert happens synchronously.

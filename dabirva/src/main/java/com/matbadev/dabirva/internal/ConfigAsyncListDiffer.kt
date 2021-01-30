@@ -1,14 +1,17 @@
 package com.matbadev.dabirva.internal
 
-import androidx.annotation.VisibleForTesting
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
-import java.lang.reflect.Field
 import java.util.Objects
 import java.util.concurrent.Executor
 
+/**
+ * Extends [AsyncListDiffer] to make the properties used for configuring available for later access
+ * and also provides a proper [equals] and [hashCode] implementation.
+ */
+@Suppress("MemberVisibilityCanBePrivate")
 internal class ConfigAsyncListDiffer<T>(
     val listUpdateCallback: ListUpdateCallback,
     val diffCallback: DiffUtil.ItemCallback<T>,
@@ -17,17 +20,6 @@ internal class ConfigAsyncListDiffer<T>(
     listUpdateCallback,
     AsyncDifferConfig.Builder(diffCallback).setBackgroundThreadExecutor(backgroundThreadExecutor).build(),
 ) {
-
-    private val mainThreadExecutorField: Field by lazy {
-        val field = AsyncListDiffer::class.java.getDeclaredField("mMainThreadExecutor")
-        field.isAccessible = true
-        field
-    }
-
-    @VisibleForTesting
-    var mainThreadExecutor: Executor
-        get() = mainThreadExecutorField.get(this) as Executor
-        set(value) = mainThreadExecutorField.set(this, value)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
