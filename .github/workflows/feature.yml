@@ -6,7 +6,7 @@ on:
       develop
 
 env:
-  GRADLEW_ARGUMENTS: "--console=plain --full-stacktrace -Pci"
+  GRADLEW_ARGUMENTS: "--console=plain --stacktrace -Pci"
 
 jobs:
   build-and-test:
