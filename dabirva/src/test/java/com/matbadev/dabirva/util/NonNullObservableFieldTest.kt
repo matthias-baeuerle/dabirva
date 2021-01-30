@@ -37,7 +37,8 @@ class NonNullObservableFieldTest {
             @Suppress("UNCHECKED_CAST")
             override fun onPropertyChanged(sender: Observable, propertyId: Int) {
                 val field = sender as NonNullObservableField<String>
-                //propertyChangedValue = field.value
+                propertyChangedValue = field.value
+                propertyChangedValue = ""
             }
         })
         val newValue = "updatedText"
