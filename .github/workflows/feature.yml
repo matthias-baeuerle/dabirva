@@ -1,0 +1,64 @@
+name: Feature
+
+on:
+  pull_request:
+    branches:
+      develop
+
+env:
+  GRADLEW_ARGUMENTS: "--console=plain --stacktrace -Pci"
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: macos-latest
+    steps:
+      # https://github.com/marketplace/actions/checkout
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          # 2021-01-24 Required by codecov, see: https://github.com/codecov/codecov-bash/issues/397
+          fetch-depth: 0
+
+      # https://github.com/marketplace/actions/setup-java-jdk
+      - name: Setup JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Bundle AAR using Gradle
+        run: ./gradlew dabirva:bundleReleaseAar $GRADLEW_ARGUMENTS
+
+      - name: Run Android lint
+        run: ./gradlew dabirva:lintRelease $GRADLEW_ARGUMENTS
+
+      - name: Run unit tests with coverage using Gradle
+        run: ./gradlew dabirva:jacocoTestReportRelease $GRADLEW_ARGUMENTS
+
+      # https://github.com/marketplace/actions/android-emulator-runner
+      - name: Run instrumented tests with coverage using Gradle
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew dabirva:connectedReleaseAndroidTest $GRADLEW_ARGUMENTS
+
+      - name: Merge test coverage reports
+        run: ./gradlew dabirva:mergeJacocoReports $GRADLEW_ARGUMENTS
+
+      # https://github.com/marketplace/actions/surefire-report
+      - name: Publish test results to GitHub
+        uses: scacap/action-surefire-report@v1
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          report_paths: ./dabirva/build/test-results/**/*.xml
+
+      # https://github.com/marketplace/actions/codecov
+      - name: Publish test coverage to codecov
+        uses: codecov/codecov-action@v1
+        with:
+          directory: ./dabirva/build/reports/jacoco/mergeJacocoReports/
+          fail_ci_if_error: true
