@@ -1,8 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
-        kotlin_version = "1.4.21"
-        android_gradle_plugin_version = "4.1.1"
+        JAVA_VERSION = JavaVersion.VERSION_1_8
+        KOTLIN_VERSION = "1.4.21"
+        ANDROID_GRADLE_PLUGIN_VERSION = "4.1.2"
     }
 
     repositories {
@@ -11,8 +12,8 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:$android_gradle_plugin_version"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.android.tools.build:gradle:$ANDROID_GRADLE_PLUGIN_VERSION"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
         classpath "de.mannodermaus.gradle.plugins:android-junit5:1.7.0.0"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -24,6 +25,16 @@ allprojects {
     repositories {
         google()
         jcenter()
+    }
+
+    gradle.projectsEvaluated {
+        tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) { task ->
+            if (!task.name.toLowerCase().contains("debug")) {
+                kotlinOptions {
+                    allWarningsAsErrors = true
+                }
+            }
+        }
     }
 }
 
