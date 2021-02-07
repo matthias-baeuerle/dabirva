@@ -4,11 +4,16 @@ plugins {
     id "kotlin-kapt"
     id "de.mannodermaus.android-junit5"
     id "jacoco"
+    id "signing"
+    id "maven-publish"
+    id "org.jetbrains.dokka"
 }
 
 ext {
     GROUP_ID = "com.matbadev.dabirva"
     ARTIFACT_ID = "dabriva"
+    VERSION_NAME = "1.0.0"
+    PUBLISHABLE_BUILD = !VERSION_NAME.endsWith("-SNAPSHOT")
 }
 
 jacoco {
@@ -22,8 +27,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 10000
-        versionName "1.0.0-alpha1"
+        versionName VERSION_NAME
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -105,4 +109,70 @@ task mergeJacocoReports(type: JacocoReport) {
             // Instrumented tests coverage
             "build/outputs/code_coverage/**/*.ec",
     ])
+}
+
+// Gradle task which bundles all sources to a ZIP file.
+task androidSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier "sources"
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: dokkaJavadoc) {
+    from "$buildDir/dokka/javadoc"
+    classifier "javadoc"
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            binaryAndSources(MavenPublication) {
+                // Applies the component for the release build variant.
+                from components.release
+
+                // Additional artifacts to be included in upload.
+                artifact androidSourcesJar
+                artifact androidJavadocsJar
+
+                // Basic details for the generated POM.
+                groupId GROUP_ID
+                artifactId ARTIFACT_ID
+                version VERSION_NAME
+
+                // Metadata for the generated POM.
+                pom {
+                    name = "Dabirva"
+                    description = "Data Binding RecyclerView Adapter for Android"
+                    url = "https://github.com/matthias-baeuerle/dabirva"
+                    packaging = "aar"
+
+                    licenses {
+                        license {
+                            name = "Apache License, Version 2.0"
+                            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                            distribution = "repo"
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = "matthias-baeuerle"
+                            name = "Matthias Bäuerle"
+                            url = "https://www.matbadev.com/"
+                        }
+                    }
+
+                    scm {
+                        url = "https://github.com/matthias-baeuerle/dabirva"
+                        connection = "scm:git:git@github.com:matthias-baeuerle/dabirva.git"
+                        developerConnection = "scm:git:git@github.com:matthias-baeuerle/dabirva.git"
+                    }
+                }
+            }
+        }
+    }
+
+    signing {
+        required { PUBLISHABLE_BUILD }
+        sign publishing.publications.binaryAndSources
+    }
 }

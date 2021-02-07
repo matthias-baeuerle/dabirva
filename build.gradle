@@ -3,6 +3,7 @@ buildscript {
     ext {
         JAVA_VERSION = JavaVersion.VERSION_1_8
         KOTLIN_VERSION = "1.4.21"
+        DOKKA_VERSION = "1.4.20"
         ANDROID_GRADLE_PLUGIN_VERSION = "4.1.2"
     }
 
@@ -15,6 +16,7 @@ buildscript {
         classpath "com.android.tools.build:gradle:$ANDROID_GRADLE_PLUGIN_VERSION"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
         classpath "de.mannodermaus.gradle.plugins:android-junit5:1.7.0.0"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$DOKKA_VERSION"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
