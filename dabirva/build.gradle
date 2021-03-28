@@ -142,7 +142,7 @@ afterEvaluate {
                 pom {
                     name = "Dabirva"
                     description = "Data Binding RecyclerView Adapter for Android"
-                    url = "https://github.com/matthias-baeuerle/dabirva"
+                    url = "https://github.com/matbadev/dabirva"
                     packaging = "aar"
 
                     licenses {
@@ -155,16 +155,16 @@ afterEvaluate {
 
                     developers {
                         developer {
-                            id = "matthias-baeuerle"
+                            id = "matbadev"
                             name = "Matthias Bäuerle"
                             url = "https://www.matbadev.com/"
                         }
                     }
 
                     scm {
-                        url = "https://github.com/matthias-baeuerle/dabirva"
-                        connection = "scm:git:git@github.com:matthias-baeuerle/dabirva.git"
-                        developerConnection = "scm:git:git@github.com:matthias-baeuerle/dabirva.git"
+                        url = "https://github.com/matbadev/dabirva"
+                        connection = "scm:git:git@github.com:matbadev/dabirva.git"
+                        developerConnection = "scm:git:git@github.com:matbadev/dabirva.git"
                     }
                 }
             }

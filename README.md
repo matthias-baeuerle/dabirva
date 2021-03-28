@@ -1,8 +1,8 @@
 # Dabirva (Data Binding RecyclerView Adapter)
 
-[![Develop workflow](https://github.com/matthias-baeuerle/dabirva/workflows/Develop/badge.svg)](https://github.com/matthias-baeuerle/dabirva/actions?query=workflow%3ADevelop)
+[![main](https://github.com/matbadev/dabirva/workflows/main/badge.svg)](https://github.com/matbadev/dabirva/actions?query=workflow%3Amain)
 
-[![codecov](https://codecov.io/gh/matthias-baeuerle/dabirva/branch/master/graph/badge.svg?token=1HB0C8S7MN)](https://codecov.io/gh/matthias-baeuerle/dabirva)
+[![codecov](https://codecov.io/gh/matbadev/dabirva/branch/master/graph/badge.svg?token=1HB0C8S7MN)](https://codecov.io/gh/matbadev/dabirva)
 
 ## License
 
