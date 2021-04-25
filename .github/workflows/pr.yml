@@ -1,13 +1,12 @@
-name: main
+name: pr
 
-on: [push, pull_request]
+on: [pull_request]
 
 env:
   GRADLEW_ARGUMENTS: "--console=plain --stacktrace -Pci"
 
 jobs:
-  build-and-test:
-    name: Build and test
+  build_and_test:
     runs-on: macos-latest
     steps:
       # https://github.com/marketplace/actions/checkout
@@ -60,24 +59,3 @@ jobs:
         with:
           directory: ./dabirva/build/reports/jacoco/mergeJacocoReports/
           fail_ci_if_error: true
-
-  publish:
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-    needs:
-      - build-and-test
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Configure JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: 14
-
-      - name: Upload Artifacts
-        run: ./gradlew uploadArchives
-        env:
-          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
-          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}

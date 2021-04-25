@@ -4,16 +4,16 @@ plugins {
     id "kotlin-kapt"
     id "de.mannodermaus.android-junit5"
     id "jacoco"
+    id "org.jetbrains.dokka"
     id "signing"
     id "maven-publish"
-    id "org.jetbrains.dokka"
 }
 
 ext {
     GROUP_ID = "com.matbadev.dabirva"
-    ARTIFACT_ID = "dabriva"
-    VERSION_NAME = "1.0.0"
-    PUBLISHABLE_BUILD = !VERSION_NAME.endsWith("-SNAPSHOT")
+    ARTIFACT_ID = "dabirva"
+    VERSION_NAME = "1.0.0-SNAPSHOT"
+    SNAPSHOT_BUILD = VERSION_NAME.endsWith("-SNAPSHOT")
 }
 
 jacoco {
@@ -111,27 +111,26 @@ task mergeJacocoReports(type: JacocoReport) {
     ])
 }
 
-// Gradle task which bundles all sources to a ZIP file.
 task androidSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
-    classifier "sources"
+    archiveClassifier.set("sources")
 }
 
-task androidJavadocsJar(type: Jar, dependsOn: dokkaJavadoc) {
+task androidJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
     from "$buildDir/dokka/javadoc"
-    classifier "javadoc"
+    archiveClassifier.set("javadoc")
 }
 
 afterEvaluate {
     publishing {
         publications {
-            binaryAndSources(MavenPublication) {
+            maven(MavenPublication) {
                 // Applies the component for the release build variant.
                 from components.release
 
                 // Additional artifacts to be included in upload.
                 artifact androidSourcesJar
-                artifact androidJavadocsJar
+                artifact androidJavadocJar
 
                 // Basic details for the generated POM.
                 groupId GROUP_ID
@@ -147,7 +146,7 @@ afterEvaluate {
 
                     licenses {
                         license {
-                            name = "Apache License, Version 2.0"
+                            name = "The Apache License, Version 2.0"
                             url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
                             distribution = "repo"
                         }
@@ -163,16 +162,36 @@ afterEvaluate {
 
                     scm {
                         url = "https://github.com/matbadev/dabirva"
-                        connection = "scm:git:git@github.com:matbadev/dabirva.git"
-                        developerConnection = "scm:git:git@github.com:matbadev/dabirva.git"
+                        connection = "scm:git:git://github.com/matbadev/dabirva.git"
+                        developerConnection = "scm:git:ssh://github.com:matbadev/dabirva.git"
                     }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = "centralS01Snapshots"
+                url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                credentials {
+                    username = findProperty("publishing.central.s01.username")
+                    password = findProperty("publishing.central.s01.password")
+                }
+            }
+
+            maven {
+                name = "centralS01Staging"
+                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = findProperty("publishing.central.s01.username")
+                    password = findProperty("publishing.central.s01.password")
                 }
             }
         }
     }
 
     signing {
-        required { PUBLISHABLE_BUILD }
-        sign publishing.publications.binaryAndSources
+        required { !SNAPSHOT_BUILD }
+        sign publishing.publications.maven
     }
 }
