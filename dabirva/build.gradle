@@ -4,11 +4,16 @@ plugins {
     id "kotlin-kapt"
     id "de.mannodermaus.android-junit5"
     id "jacoco"
+    id "org.jetbrains.dokka"
+    id "signing"
+    id "maven-publish"
 }
 
 ext {
     GROUP_ID = "com.matbadev.dabirva"
-    ARTIFACT_ID = "dabriva"
+    ARTIFACT_ID = "dabirva"
+    VERSION_NAME = "1.0.0-SNAPSHOT"
+    SNAPSHOT_BUILD = VERSION_NAME.endsWith("-SNAPSHOT")
 }
 
 jacoco {
@@ -22,8 +27,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 10000
-        versionName "1.0.0-alpha1"
+        versionName VERSION_NAME
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -65,7 +69,7 @@ android {
     // See: https://developer.android.com/reference/tools/gradle-api/4.1/com/android/build/api/dsl/LintOptions
     lintOptions {
         abortOnError true
-        warningsAsErrors true
+        warningsAsErrors false
         textReport false
         xmlReport true
         htmlReport false
@@ -105,4 +109,81 @@ task mergeJacocoReports(type: JacocoReport) {
             // Instrumented tests coverage
             "build/outputs/code_coverage/**/*.ec",
     ])
+}
+
+task androidSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier.set("sources")
+}
+
+task androidJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    from "$buildDir/dokka/javadoc"
+    archiveClassifier.set("javadoc")
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                // Applies the component for the release build variant.
+                from components.release
+
+                // Additional artifacts to be included in upload.
+                artifact androidSourcesJar
+                artifact androidJavadocJar
+
+                // Basic details for the generated POM.
+                groupId GROUP_ID
+                artifactId ARTIFACT_ID
+                version VERSION_NAME
+
+                // Metadata for the generated POM.
+                pom {
+                    name = "Dabirva"
+                    description = "Data Binding RecyclerView Adapter for Android"
+                    url = "https://github.com/matbadev/dabirva"
+                    packaging = "aar"
+
+                    developers {
+                        developer {
+                            id = "matbadev"
+                            name = "Matthias Bäuerle"
+                            url = "https://www.matbadev.com/"
+                        }
+                    }
+
+                    scm {
+                        url = "https://github.com/matbadev/dabirva"
+                        connection = "scm:git:git://github.com/matbadev/dabirva.git"
+                        developerConnection = "scm:git:ssh://github.com:matbadev/dabirva.git"
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = "centralS01Snapshots"
+                url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                credentials {
+                    username = findProperty("publishing.central.s01.username")
+                    password = findProperty("publishing.central.s01.password")
+                }
+            }
+
+            maven {
+                name = "centralS01Staging"
+                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = findProperty("publishing.central.s01.username")
+                    password = findProperty("publishing.central.s01.password")
+                }
+            }
+        }
+    }
+
+    signing {
+        required { !SNAPSHOT_BUILD }
+        sign publishing.publications.maven
+    }
 }

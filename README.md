@@ -1,5 +1,5 @@
-# Data Binding RecyclerView Adapter (Dabirva)
+# Dabirva (Data Binding RecyclerView Adapter)
 
-[![Feature workflow](https://github.com/matthias-baeuerle/dabirva/workflows/Feature/badge.svg)](https://github.com/matthias-baeuerle/dabirva/actions?query=workflow%3AFeature)
+[![publish](https://github.com/matbadev/dabirva/workflows/publish/badge.svg)](https://github.com/matbadev/dabirva/actions/workflows/publish.yml)
 
-[![codecov](https://codecov.io/gh/matthias-baeuerle/dabirva/branch/master/graph/badge.svg?token=1HB0C8S7MN)](https://codecov.io/gh/matthias-baeuerle/dabirva)
+[![codecov](https://codecov.io/gh/matbadev/dabirva/branch/master/graph/badge.svg?token=1HB0C8S7MN)](https://codecov.io/gh/matbadev/dabirva)
