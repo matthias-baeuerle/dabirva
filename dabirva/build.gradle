@@ -187,3 +187,7 @@ afterEvaluate {
         sign publishing.publications.maven
     }
 }
+
+tasks.withType(Sign) {
+    onlyIf { !SNAPSHOT_BUILD }
+}
