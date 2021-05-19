@@ -3,7 +3,7 @@ buildscript {
     ext {
         JAVA_VERSION = JavaVersion.VERSION_1_8
         KOTLIN_VERSION = "1.4.21"
-        DOKKA_VERSION = "1.4.20"
+        DOKKA_VERSION = "1.4.32"
         ANDROID_GRADLE_PLUGIN_VERSION = "4.1.3"
     }
 
