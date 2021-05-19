@@ -12,9 +12,6 @@ jobs:
       # https://github.com/marketplace/actions/checkout
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          # 2021-01-24 Required by codecov, see: https://github.com/codecov/codecov-bash/issues/397
-          fetch-depth: 0
 
       # https://github.com/marketplace/actions/gradle-wrapper-validation
       - name: Validate Gradle Wrapper
