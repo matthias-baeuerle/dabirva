@@ -1,7 +1,7 @@
-name: pr
+name: check
 
 on:
-  - pull_request
+  push:
 
 env:
   GRADLEW_ARGUMENTS: "--console=plain --stacktrace -Pci"
@@ -23,6 +23,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 8
+
+      - name: Setup Gradle
+        run: ./gradlew --version
 
       - name: Check public API
         run: ./gradlew dabirva:apiCheck $GRADLEW_ARGUMENTS
@@ -49,7 +52,7 @@ jobs:
       # https://github.com/marketplace/actions/surefire-report
       - name: Publish test results to GitHub
         uses: scacap/action-surefire-report@v1
-        if: always()
+        if: ${{ always() }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           report_paths: ./dabirva/build/test-results/**/*.xml
