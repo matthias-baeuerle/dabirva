@@ -7,7 +7,7 @@ on:
       - master
 
 env:
-  GRADLEW_ARGUMENTS: "--console=plain --stacktrace -Pci"
+  GRADLEW_ARGUMENTS: "--console=plain --stacktrace --warning-mode=all -Pci"
 
 jobs:
   build_and_publish:
