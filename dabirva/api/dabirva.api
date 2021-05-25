@@ -96,6 +96,9 @@ public abstract interface class com/matbadev/dabirva/decoration/HeaderPositionPr
 
 public final class com/matbadev/dabirva/decoration/HorizontalStickyHeaderDecoration : com/matbadev/dabirva/decoration/StickyHeaderDecoration {
 	public fun <init> (Lcom/matbadev/dabirva/decoration/HeaderPositionProvider;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/matbadev/dabirva/decoration/ItemHeaderProvider : com/matbadev/dabirva/decoration/HeaderPositionProvider {
@@ -106,13 +109,19 @@ public final class com/matbadev/dabirva/decoration/ItemHeaderProvider : com/matb
 public abstract class com/matbadev/dabirva/decoration/StickyHeaderDecoration : androidx/recyclerview/widget/RecyclerView$ItemDecoration {
 	public fun <init> (Lcom/matbadev/dabirva/decoration/HeaderPositionProvider;)V
 	protected final fun getHeaderPositionProvider ()Lcom/matbadev/dabirva/decoration/HeaderPositionProvider;
+	public final fun getItemOffsets (Landroid/graphics/Rect;ILandroidx/recyclerview/widget/RecyclerView;)V
 	protected fun onBoundHeaderViewHolder (Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$State;Lcom/matbadev/dabirva/Dabirva;Lcom/matbadev/dabirva/DataBindingViewHolder;)V
-	protected abstract fun onDrawHeaderOverItems (Landroid/graphics/Canvas;Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$State;Lcom/matbadev/dabirva/Dabirva;Lcom/matbadev/dabirva/DataBindingViewHolder;)V
+	public final fun onDraw (Landroid/graphics/Canvas;Landroidx/recyclerview/widget/RecyclerView;)V
+	protected fun onDrawHeaderOverItems (Landroid/graphics/Canvas;Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$State;Lcom/matbadev/dabirva/Dabirva;Lcom/matbadev/dabirva/DataBindingViewHolder;)V
+	public final fun onDrawOver (Landroid/graphics/Canvas;Landroidx/recyclerview/widget/RecyclerView;)V
 	public fun onDrawOver (Landroid/graphics/Canvas;Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$State;)V
 }
 
 public final class com/matbadev/dabirva/decoration/VerticalStickyHeaderDecoration : com/matbadev/dabirva/decoration/StickyHeaderDecoration {
 	public fun <init> (Lcom/matbadev/dabirva/decoration/HeaderPositionProvider;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/matbadev/dabirva/util/NonNullObservableField : androidx/databinding/ObservableField {
