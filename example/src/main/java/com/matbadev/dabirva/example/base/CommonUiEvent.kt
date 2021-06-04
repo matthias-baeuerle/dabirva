@@ -3,6 +3,7 @@ package com.matbadev.dabirva.example.base
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.widget.Toast
 import kotlin.reflect.KClass
 
@@ -15,8 +16,8 @@ data class StartActivityEvent(
     val options: Bundle? = null,
 ) : CommonUiEvent()
 
-data class StartAppActivityEvent<A : BaseScreenArguments>(
-    val activityClass: KClass<out BaseActivity<*, A, *>>,
+data class StartAppActivityEvent<A : Parcelable>(
+    val activityClass: KClass<out BaseActivity<A, *, *>>,
     val options: Bundle? = null,
     val arguments: A? = null,
 ) : CommonUiEvent()

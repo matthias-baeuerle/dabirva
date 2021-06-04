@@ -1,10 +1,11 @@
 package com.matbadev.dabirva.example.ui.stickyheader.horizontal
 
+import android.os.Parcelable
 import com.matbadev.dabirva.example.AppRepositories
 import com.matbadev.dabirva.example.R
 import com.matbadev.dabirva.example.base.BaseActivity
 
-class HorizontalStickyHeaderListActivity : BaseActivity<HorizontalStickyHeaderListEvent, HorizontalStickyHeaderListArguments, HorizontalStickyHeaderListViewModel>(
+class HorizontalStickyHeaderListActivity : BaseActivity<Parcelable, HorizontalStickyHeaderListEvent, HorizontalStickyHeaderListViewModel>(
     viewModelClass = HorizontalStickyHeaderListViewModel::class,
     layoutId = R.layout.activity_sticky_header_list_horizontal,
 ) {

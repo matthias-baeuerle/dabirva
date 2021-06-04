@@ -1,5 +1,6 @@
 package com.matbadev.dabirva.example.ui.click
 
+import android.os.Parcelable
 import com.matbadev.dabirva.DabirvaData
 import com.matbadev.dabirva.example.base.BaseScreenViewModel
 import com.matbadev.dabirva.example.base.ShowToastEvent
@@ -9,11 +10,11 @@ import com.matbadev.dabirva.example.ui.ClickableNoteViewModel
 
 class ClickListActivityViewModel(
     private val noteRepository: NoteRepository,
-) : BaseScreenViewModel<ClickListActivityEvent, ClickListActivityArguments>() {
+) : BaseScreenViewModel<Parcelable, ClickListActivityEvent>() {
 
     lateinit var dabirvaData: DabirvaData
 
-    override fun initWithArguments(arguments: ClickListActivityArguments?) {
+    override fun initWithArguments(arguments: Parcelable?) {
         super.initWithArguments(arguments)
         dabirvaData = DabirvaData(
             items = noteRepository.getNotes().map { note: Note ->

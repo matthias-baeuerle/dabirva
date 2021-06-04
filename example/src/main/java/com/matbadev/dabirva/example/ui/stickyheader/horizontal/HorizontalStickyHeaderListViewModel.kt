@@ -1,5 +1,6 @@
 package com.matbadev.dabirva.example.ui.stickyheader.horizontal
 
+import android.os.Parcelable
 import com.matbadev.dabirva.DabirvaData
 import com.matbadev.dabirva.ItemViewModel
 import com.matbadev.dabirva.decoration.HorizontalStickyHeaderDecoration
@@ -13,11 +14,11 @@ import com.matbadev.dabirva.example.ui.NoteColumnViewModel
 
 class HorizontalStickyHeaderListViewModel(
     private val noteRepository: NoteRepository,
-) : BaseScreenViewModel<HorizontalStickyHeaderListEvent, HorizontalStickyHeaderListArguments>() {
+) : BaseScreenViewModel<Parcelable, HorizontalStickyHeaderListEvent>() {
 
     lateinit var dabirvaData: DabirvaData
 
-    override fun initWithArguments(arguments: HorizontalStickyHeaderListArguments?) {
+    override fun initWithArguments(arguments: Parcelable?) {
         super.initWithArguments(arguments)
         dabirvaData = DabirvaData(
             items = noteRepository.getNotes()

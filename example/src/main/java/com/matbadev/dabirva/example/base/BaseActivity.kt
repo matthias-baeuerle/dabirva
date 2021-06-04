@@ -2,6 +2,7 @@ package com.matbadev.dabirva.example.base
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.widget.Toast
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
@@ -15,7 +16,7 @@ import com.matbadev.dabirva.example.AppRepositories
 import com.matbadev.dabirva.example.BR
 import kotlin.reflect.KClass
 
-abstract class BaseActivity<E, A : BaseScreenArguments, VM : BaseScreenViewModel<E, A>>(
+abstract class BaseActivity<A : Parcelable, E, VM : BaseScreenViewModel<A, E>>(
     private val viewModelClass: KClass<VM>,
     @LayoutRes private val layoutId: Int,
 ) : AppCompatActivity(), ViewModelProvider.Factory, UiEventHandler<E> {
@@ -51,7 +52,7 @@ abstract class BaseActivity<E, A : BaseScreenArguments, VM : BaseScreenViewModel
         }
         is StartAppActivityEvent<*> -> {
             val intent = Intent(this, event.activityClass.java)
-            event.arguments?.let { arguments: BaseScreenArguments ->
+            event.arguments?.let { arguments: Parcelable ->
                 intent.putExtra(BaseScreenViewModel.SCREEN_ARGUMENTS_KEY, arguments)
             }
             startActivity(intent, event.options)
