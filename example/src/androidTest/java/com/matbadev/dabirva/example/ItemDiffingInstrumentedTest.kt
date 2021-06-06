@@ -10,7 +10,7 @@ import com.matbadev.dabirva.example.ui.NoteViewModel
 import com.matbadev.dabirva.example.ui.diffing.ItemDiffingActivity
 import com.matbadev.dabirva.example.ui.diffing.ItemDiffingActivityViewModel
 import com.matbadev.dabirva.example.util.DataBindingIdlingResourceRule
-import com.matbadev.dabirva.example.util.RecyclerViewMatchers.atViewPosition
+import com.matbadev.dabirva.example.util.atViewPosition
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -27,7 +27,7 @@ class ItemDiffingInstrumentedTest {
     @Before
     fun prepare() {
         val scenario = ActivityScenario.launch(ItemDiffingActivity::class.java)
-        dataBindingIdlingResourceRule.monitorActivity(scenario)
+        dataBindingIdlingResourceRule.setScenario(scenario)
         scenario.onActivity { activity: ItemDiffingActivity ->
             viewModel = activity.viewModel
         }

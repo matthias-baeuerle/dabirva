@@ -11,20 +11,16 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 
-object RecyclerViewMatchers {
+fun withLinearLayoutManager(): Matcher<View> {
+    return WithLinearLayoutManager()
+}
 
-    fun withLinearLayoutManager(): Matcher<View> {
-        return WithLinearLayoutManager()
-    }
+fun atAdapterPosition(@IdRes recyclerViewId: Int, adapterPosition: Int): Matcher<View> {
+    return AdapterPositionChildMatcher(recyclerViewId, adapterPosition)
+}
 
-    fun atAdapterPosition(@IdRes recyclerViewId: Int, adapterPosition: Int): Matcher<View> {
-        return AdapterPositionChildMatcher(recyclerViewId, adapterPosition)
-    }
-
-    fun atViewPosition(@IdRes recyclerViewId: Int, viewPosition: Int): Matcher<View> {
-        return ViewPositionChildMatcher(recyclerViewId, viewPosition)
-    }
-
+fun atViewPosition(@IdRes recyclerViewId: Int, viewPosition: Int): Matcher<View> {
+    return ViewPositionChildMatcher(recyclerViewId, viewPosition)
 }
 
 private class WithLinearLayoutManager : BoundedMatcher<View, RecyclerView>(RecyclerView::class.java) {

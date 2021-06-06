@@ -7,9 +7,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.matbadev.dabirva.example.ui.simple.SimpleListActivity
-import com.matbadev.dabirva.example.util.RecyclerViewActions.scrollToWithOffset
-import com.matbadev.dabirva.example.util.RecyclerViewMatchers.atAdapterPosition
-import com.matbadev.dabirva.example.util.RecyclerViewMatchers.atViewPosition
+import com.matbadev.dabirva.example.util.atAdapterPosition
+import com.matbadev.dabirva.example.util.atViewPosition
+import com.matbadev.dabirva.example.util.scrollToWithOffset
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

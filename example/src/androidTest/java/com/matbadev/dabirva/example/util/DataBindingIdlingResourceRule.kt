@@ -8,20 +8,22 @@ import org.junit.runner.Description
 
 class DataBindingIdlingResourceRule : TestWatcher() {
 
+    private val idlingRegistry = IdlingRegistry.getInstance()
+
     private val idlingResource = DataBindingIdlingResource()
 
-    override fun finished(description: Description?) {
-        IdlingRegistry.getInstance().unregister(idlingResource)
-        super.finished(description)
-    }
-
-    override fun starting(description: Description?) {
-        IdlingRegistry.getInstance().register(idlingResource)
+    override fun starting(description: Description) {
         super.starting(description)
+        idlingRegistry.register(idlingResource)
     }
 
-    fun monitorActivity(scenario: ActivityScenario<out Activity>) {
-        idlingResource.monitorActivity(scenario)
+    override fun finished(description: Description) {
+        super.finished(description)
+        idlingRegistry.unregister(idlingResource)
+    }
+
+    fun setScenario(scenario: ActivityScenario<out Activity>) {
+        idlingResource.setScenario(scenario)
     }
 
 }

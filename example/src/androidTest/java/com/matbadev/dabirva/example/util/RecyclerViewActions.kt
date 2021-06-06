@@ -6,16 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import com.matbadev.dabirva.example.util.RecyclerViewMatchers.withLinearLayoutManager
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
-object RecyclerViewActions {
-
-    fun scrollToWithOffset(position: Int, offset: Int = 0): ViewAction {
-        return OffsetScrollRecyclerViewAction(position, offset)
-    }
-
+fun scrollToWithOffset(position: Int, offset: Int = 0): ViewAction {
+    return OffsetScrollRecyclerViewAction(position, offset)
 }
 
 private class OffsetScrollRecyclerViewAction(
