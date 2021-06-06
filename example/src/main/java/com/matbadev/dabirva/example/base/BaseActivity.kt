@@ -6,6 +6,7 @@ import android.os.Parcelable
 import android.widget.Toast
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -21,7 +22,8 @@ abstract class BaseActivity<A : Parcelable, E, VM : BaseScreenViewModel<A, E>>(
     @LayoutRes private val layoutId: Int,
 ) : AppCompatActivity(), ViewModelProvider.Factory, UiEventHandler<E> {
 
-    protected lateinit var viewModel: VM
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    lateinit var viewModel: VM
 
     private lateinit var binding: ViewDataBinding
 

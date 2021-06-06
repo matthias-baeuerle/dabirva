@@ -30,6 +30,18 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
+                android:id="@+id/launch_item_diffing"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/listPreferredItemHeight"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:onClick="@{view -> viewModel.startItemDiffingActivity()}"
+                android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+                android:paddingEnd="?android:attr/listPreferredItemPaddingRight"
+                android:text="@string/item_diffing_title"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/listPreferredItemHeight"
                 android:background="?android:attr/selectableItemBackground"
