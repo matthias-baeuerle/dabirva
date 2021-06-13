@@ -11,6 +11,7 @@ import com.matbadev.dabirva.example.ui.diffing.ItemDiffingActivity
 import com.matbadev.dabirva.example.ui.diffing.ItemDiffingActivityViewModel
 import com.matbadev.dabirva.example.util.DataBindingIdlingResourceRule
 import com.matbadev.dabirva.example.util.atViewPosition
+import com.matbadev.dabirva.example.util.useActivity
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -22,15 +23,13 @@ class ItemDiffingInstrumentedTest {
     @get:Rule
     val dataBindingIdlingResourceRule = DataBindingIdlingResourceRule()
 
-    lateinit var viewModel: ItemDiffingActivityViewModel
+    private lateinit var viewModel: ItemDiffingActivityViewModel
 
     @Before
     fun prepare() {
         val scenario = ActivityScenario.launch(ItemDiffingActivity::class.java)
         dataBindingIdlingResourceRule.setScenario(scenario)
-        scenario.onActivity { activity: ItemDiffingActivity ->
-            viewModel = activity.viewModel
-        }
+        viewModel = scenario.useActivity { it.viewModel }
     }
 
     @Test

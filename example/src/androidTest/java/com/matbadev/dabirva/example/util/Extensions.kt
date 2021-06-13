@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.test.core.app.ActivityScenario
 
-val Activity.rootView: View
-    get() = contentView.rootView
-
 val Activity.contentView: View
     get() = findViewById(android.R.id.content)
+
+val Activity.rootView: View
+    get() = contentView.rootView
 
 fun View.getHierarchyDepthFirst(): Sequence<View> {
     return if (this is ViewGroup) {

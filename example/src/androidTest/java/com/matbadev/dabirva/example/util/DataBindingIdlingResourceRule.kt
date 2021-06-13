@@ -20,9 +20,10 @@ class DataBindingIdlingResourceRule : TestWatcher() {
     override fun finished(description: Description) {
         super.finished(description)
         idlingRegistry.unregister(idlingResource)
+        setScenario(null)
     }
 
-    fun setScenario(scenario: ActivityScenario<out Activity>) {
+    fun setScenario(scenario: ActivityScenario<out Activity>?) {
         idlingResource.setScenario(scenario)
     }
 
