@@ -41,17 +41,17 @@ jobs:
         run: cat ./dabirva/build/reports/lint-results-release.xml
 
       - name: Run unit tests with coverage
-        run: ./gradlew dabirva:jacocoTestReportRelease $GRADLEW_ARGUMENTS
+        run: ./gradlew dabirva:jacocoTestReportDebug $GRADLEW_ARGUMENTS
 
       # https://github.com/marketplace/actions/android-emulator-runner
       - name: Run instrumented tests with coverage
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew dabirva:connectedReleaseAndroidTest $GRADLEW_ARGUMENTS
+          script: ./gradlew dabirva:connectedDebugAndroidTest $GRADLEW_ARGUMENTS
 
       - name: Merge test coverage reports
-        run: ./gradlew dabirva:mergeJacocoReports $GRADLEW_ARGUMENTS
+        run: ./gradlew collectDabirvaCoverageDebug $GRADLEW_ARGUMENTS
 
       # https://github.com/marketplace/actions/surefire-report
       - name: Publish test results to GitHub
@@ -65,5 +65,5 @@ jobs:
       - name: Publish test coverage to codecov
         uses: codecov/codecov-action@v1
         with:
-          directory: ./dabirva/build/reports/jacoco/mergeJacocoReports/
+          directory: ./build/reports/jacoco/collectDabirvaCoverageDebug/
           fail_ci_if_error: true

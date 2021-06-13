@@ -54,7 +54,7 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task collectDabirvaCoverage(type: JacocoReport) {
+task collectDabirvaCoverageDebug(type: JacocoReport) {
     group = "reporting"
     description = "Collect Jacoco coverage data of dabirva and example module into a single report"
 
