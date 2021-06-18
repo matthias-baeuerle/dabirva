@@ -32,7 +32,7 @@ private class WithChildCount(
 ) : BoundedMatcher<View, RecyclerView>(RecyclerView::class.java) {
 
     override fun describeTo(description: Description) {
-        description.appendText("has a LinearLayoutManager attached")
+        description.appendText("has $childCount children")
     }
 
     override fun matchesSafely(item: RecyclerView): Boolean {
