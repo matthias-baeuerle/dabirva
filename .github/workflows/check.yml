@@ -48,7 +48,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew dabirva:connectedDebugAndroidTest $GRADLEW_ARGUMENTS
+          script: ./gradlew example:connectedDebugAndroidTest $GRADLEW_ARGUMENTS
 
       - name: Merge test coverage reports
         run: ./gradlew collectDabirvaCoverageDebug $GRADLEW_ARGUMENTS
