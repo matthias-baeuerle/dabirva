@@ -11,6 +11,10 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 
+fun withChildCount(childCount: Int): Matcher<View> {
+    return WithChildCount(childCount)
+}
+
 fun withLinearLayoutManager(): Matcher<View> {
     return WithLinearLayoutManager()
 }
@@ -21,6 +25,20 @@ fun atAdapterPosition(@IdRes recyclerViewId: Int, adapterPosition: Int): Matcher
 
 fun atViewPosition(@IdRes recyclerViewId: Int, viewPosition: Int): Matcher<View> {
     return ViewPositionChildMatcher(recyclerViewId, viewPosition)
+}
+
+private class WithChildCount(
+    private val childCount: Int,
+) : BoundedMatcher<View, RecyclerView>(RecyclerView::class.java) {
+
+    override fun describeTo(description: Description) {
+        description.appendText("has a LinearLayoutManager attached")
+    }
+
+    override fun matchesSafely(item: RecyclerView): Boolean {
+        return item.childCount == childCount
+    }
+
 }
 
 private class WithLinearLayoutManager : BoundedMatcher<View, RecyclerView>(RecyclerView::class.java) {
@@ -55,8 +73,7 @@ private abstract class RecyclerViewChildMatcher(
 
     final override fun matchesSafely(item: View): Boolean {
         currentResources = item.resources
-        val recyclerView: RecyclerView = item.rootView.findViewById(recyclerViewId)
-            ?: return false
+        val recyclerView: RecyclerView = item.rootView.findViewById(recyclerViewId) ?: return false
         return matchesChild(item, recyclerView)
     }
 
@@ -75,8 +92,7 @@ private class AdapterPositionChildMatcher(
     }
 
     override fun matchesChild(item: View, recyclerView: RecyclerView): Boolean {
-        val childViewHolder: ViewHolder = recyclerView.findViewHolderForAdapterPosition(adapterPosition)
-            ?: return false
+        val childViewHolder: ViewHolder = recyclerView.findViewHolderForAdapterPosition(adapterPosition) ?: return false
         return childViewHolder.itemView === item
     }
 
@@ -93,8 +109,7 @@ private class ViewPositionChildMatcher(
     }
 
     override fun matchesChild(item: View, recyclerView: RecyclerView): Boolean {
-        val childView: View = recyclerView.getChildAt(viewPosition)
-            ?: return false
+        val childView: View = recyclerView.getChildAt(viewPosition) ?: return false
         return childView === item
     }
 
