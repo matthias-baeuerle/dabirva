@@ -35,10 +35,10 @@ jobs:
         run: ./gradlew dabirva:apiCheck $GRADLEW_ARGUMENTS
 
       - name: Run Android lint
-        run: ./gradlew dabirva:lintRelease $GRADLEW_ARGUMENTS
+        run: ./gradlew dabirva:lintDebug $GRADLEW_ARGUMENTS
 
       - name: Print Android lint results
-        run: cat ./dabirva/build/reports/lint-results-release.xml
+        run: cat ./dabirva/build/reports/lint-results-debug.xml
 
       - name: Run unit tests with coverage
         run: ./gradlew dabirva:jacocoTestReportDebug $GRADLEW_ARGUMENTS
