@@ -68,5 +68,5 @@ jobs:
       - name: Publish test coverage to codecov
         uses: codecov/codecov-action@v1
         with:
-          directory: ./build/reports/
+          directory: ./build/reports/jacoco/jacocoMergedReportDebug
           fail_ci_if_error: true
