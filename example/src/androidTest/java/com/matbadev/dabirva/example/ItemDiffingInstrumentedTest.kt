@@ -109,6 +109,140 @@ class ItemDiffingInstrumentedTest {
         verifyNoMoreInteractions(adapterDataObserver)
     }
 
+    @Test
+    fun removeSingleSync() {
+        removeSingle(DiffExecutorMode.SYNC)
+    }
+
+    @Test
+    fun removeSingleAsync() {
+        removeSingle(DiffExecutorMode.ASYNC)
+    }
+
+    private fun removeSingle(diffExecutorMode: DiffExecutorMode) {
+        runTest(
+            initialItems = listOf(A, B, C),
+            updatedItems = listOf(A, C),
+            diffExecutorMode = diffExecutorMode,
+        )
+        verify(adapterDataObserver).onItemRangeRemoved(1, 1)
+        verifyNoMoreInteractions(adapterDataObserver)
+    }
+
+    @Test
+    fun removeMultipleSync() {
+        removeMultiple(DiffExecutorMode.SYNC)
+    }
+
+    @Test
+    fun removeMultipleAsync() {
+        removeMultiple(DiffExecutorMode.ASYNC)
+    }
+
+    private fun removeMultiple(diffExecutorMode: DiffExecutorMode) {
+        runTest(
+            initialItems = listOf(A, B, C),
+            updatedItems = listOf(B),
+            diffExecutorMode = diffExecutorMode,
+        )
+        inOrder(adapterDataObserver).apply {
+            verify(adapterDataObserver).onItemRangeRemoved(2, 1)
+            verify(adapterDataObserver).onItemRangeRemoved(0, 1)
+        }
+        verifyNoMoreInteractions(adapterDataObserver)
+    }
+
+    @Test
+    fun changeSingleSync() {
+        changeSingle(DiffExecutorMode.SYNC)
+    }
+
+    @Test
+    fun changeSingleAsync() {
+        changeSingle(DiffExecutorMode.ASYNC)
+    }
+
+    private fun changeSingle(diffExecutorMode: DiffExecutorMode) {
+        runTest(
+            initialItems = listOf(A, NoteViewModel(2, "initial"), C),
+            updatedItems = listOf(A, NoteViewModel(2, "updated"), C),
+            diffExecutorMode = diffExecutorMode,
+        )
+        verify(adapterDataObserver).onItemRangeChanged(1, 1, null)
+        verifyNoMoreInteractions(adapterDataObserver)
+    }
+
+    @Test
+    fun changeMultipleSync() {
+        changeMultiple(DiffExecutorMode.SYNC)
+    }
+
+    @Test
+    fun changeMultipleAsync() {
+        changeMultiple(DiffExecutorMode.ASYNC)
+    }
+
+    private fun changeMultiple(diffExecutorMode: DiffExecutorMode) {
+        runTest(
+            initialItems = listOf(A, NoteViewModel(2, "initial"), C, NoteViewModel(4, "initial")),
+            updatedItems = listOf(A, NoteViewModel(2, "updated"), C, NoteViewModel(4, "updated")),
+            diffExecutorMode = diffExecutorMode,
+        )
+        inOrder(adapterDataObserver).apply {
+            verify(adapterDataObserver).onItemRangeChanged(3, 1, null)
+            verify(adapterDataObserver).onItemRangeChanged(1, 1, null)
+        }
+        verifyNoMoreInteractions(adapterDataObserver)
+    }
+
+    @Test
+    fun moveSingleSync() {
+        moveSingle(DiffExecutorMode.SYNC)
+    }
+
+    @Test
+    fun moveSingleAsync() {
+        moveSingle(DiffExecutorMode.ASYNC)
+    }
+
+    private fun moveSingle(diffExecutorMode: DiffExecutorMode) {
+        runTest(
+            initialItems = listOf(A, B, C),
+            updatedItems = listOf(B, A, C),
+            diffExecutorMode = diffExecutorMode,
+        )
+        verify(adapterDataObserver).onItemRangeMoved(1, 0, 1)
+        verifyNoMoreInteractions(adapterDataObserver)
+    }
+
+    @Test
+    fun moveMultipleSync() {
+        moveMultiple(DiffExecutorMode.SYNC)
+    }
+
+    @Test
+    fun moveMultipleAsync() {
+        moveMultiple(DiffExecutorMode.ASYNC)
+    }
+
+    private fun moveMultiple(diffExecutorMode: DiffExecutorMode) {
+        runTest(
+            initialItems = listOf(A, B, C, D),
+            updatedItems = listOf(D, A, C, B),
+            diffExecutorMode = diffExecutorMode,
+        )
+        inOrder(adapterDataObserver).apply { //
+            // A  B  C  D
+            //    |<<|     (first call)
+            // A  C  B  D
+            // |<<<<<<<<|  (second call)
+            // D  A  C  B
+            verify(adapterDataObserver).onItemRangeMoved(2, 1, 1)
+            verify(adapterDataObserver).onItemRangeMoved(3, 0, 1)
+        }
+        verifyNoMoreInteractions(adapterDataObserver)
+    }
+
     private fun runTest(
         initialItems: List<NoteViewModel>,
         updatedItems: List<NoteViewModel>,
@@ -119,17 +253,25 @@ class ItemDiffingInstrumentedTest {
     }
 
     private fun runTestSync(initialItems: List<NoteViewModel>, updatedItems: List<NoteViewModel>) {
+        val recyclerView: RecyclerView = scenario.useActivity { it.findViewById(R.id.recycler_view) }
+        recyclerView.itemAnimator = null
+
         viewModel.dabirvaData.value = DabirvaData(
             items = initialItems,
         )
 
         checkRecyclerViewItems(initialItems)
 
-        runWithAdapterDataObserver {
+        val recyclerViewAdapter = checkNotNull(recyclerView.adapter)
+        recyclerViewAdapter.registerAdapterDataObserver(adapterDataObserver)
+        try {
             viewModel.dabirvaData.value = DabirvaData(
                 items = updatedItems,
             )
+
             checkRecyclerViewItems(updatedItems)
+        } finally {
+            recyclerViewAdapter.unregisterAdapterDataObserver(adapterDataObserver)
         }
     }
 
@@ -138,6 +280,8 @@ class ItemDiffingInstrumentedTest {
         updatedItems: List<NoteViewModel>,
     ) {
         val diffExecutor = TrampolineExecutor()
+        val recyclerView: RecyclerView = scenario.useActivity { it.findViewById(R.id.recycler_view) }
+        recyclerView.itemAnimator = null
 
         // The initial insert is done synchronously by AsyncListDiffer.
         viewModel.dabirvaData.value = DabirvaData(
@@ -147,7 +291,9 @@ class ItemDiffingInstrumentedTest {
 
         checkRecyclerViewItems(initialItems)
 
-        runWithAdapterDataObserver {
+        val recyclerViewAdapter = checkNotNull(recyclerView.adapter)
+        recyclerViewAdapter.registerAdapterDataObserver(adapterDataObserver)
+        try {
             viewModel.dabirvaData.value = DabirvaData(
                 items = updatedItems,
                 diffExecutor = diffExecutor,
@@ -161,6 +307,8 @@ class ItemDiffingInstrumentedTest {
 
             assertEquals(1, diffExecutor.executedCommandsCount)
             checkRecyclerViewItems(updatedItems)
+        } finally {
+            recyclerViewAdapter.unregisterAdapterDataObserver(adapterDataObserver)
         }
     }
 
@@ -170,17 +318,6 @@ class ItemDiffingInstrumentedTest {
         expectedItems.forEachIndexed { index, noteViewModel ->
             onView(atViewPosition(R.id.recycler_view, index)) //
                 .check(matches(withText(noteViewModel.text)))
-        }
-    }
-
-    private fun runWithAdapterDataObserver(block: () -> Unit) {
-        val recyclerView: RecyclerView = scenario.useActivity { it.findViewById(R.id.recycler_view) }
-        val recyclerViewAdapter = checkNotNull(recyclerView.adapter)
-        recyclerViewAdapter.registerAdapterDataObserver(adapterDataObserver)
-        try {
-            block()
-        } finally {
-            recyclerViewAdapter.unregisterAdapterDataObserver(adapterDataObserver)
         }
     }
 
