@@ -51,7 +51,7 @@ jobs:
           script: ./gradlew example:connectedDebugAndroidTest $GRADLEW_ARGUMENTS
 
       - name: Merge test coverage reports
-        run: ./gradlew collectDabirvaCoverageDebug $GRADLEW_ARGUMENTS
+        run: ./gradlew jacocoMergedReportDebug $GRADLEW_ARGUMENTS
 
       # https://github.com/marketplace/actions/surefire-report
       - name: Publish test results to GitHub

@@ -54,6 +54,8 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+// Task name is used as report file name and that must correspond to a pattern recognized by codecov-bash:
+// https://github.com/codecov/codecov-bash/blob/master/codecov
 task jacocoMergedReportDebug(type: JacocoReport) {
     group = "reporting"
     description = "Collect Jacoco coverage data of dabirva and example module into a single report"
