@@ -1,10 +1,11 @@
 package com.matbadev.dabirva.example.ui.simple
 
+import android.os.Parcelable
 import com.matbadev.dabirva.example.AppRepositories
 import com.matbadev.dabirva.example.R
 import com.matbadev.dabirva.example.base.BaseActivity
 
-class SimpleListActivity : BaseActivity<SimpleListActivityEvent, SimpleListActivityArguments, SimpleListActivityViewModel>(
+class SimpleListActivity : BaseActivity<Parcelable, SimpleListActivityEvent, SimpleListActivityViewModel>(
     viewModelClass = SimpleListActivityViewModel::class,
     layoutId = R.layout.activity_simple_list,
 ) {
