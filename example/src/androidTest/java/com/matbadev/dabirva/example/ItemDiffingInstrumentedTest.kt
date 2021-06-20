@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -20,9 +21,11 @@ import com.matbadev.dabirva.example.ui.NoteViewModel
 import com.matbadev.dabirva.example.ui.diffing.ItemDiffingActivity
 import com.matbadev.dabirva.example.ui.diffing.ItemDiffingActivityViewModel
 import com.matbadev.dabirva.example.util.DataBindingIdlingResourceRule
+import com.matbadev.dabirva.example.util.TrampolineExecutor
 import com.matbadev.dabirva.example.util.atViewPosition
 import com.matbadev.dabirva.example.util.useActivity
 import com.matbadev.dabirva.example.util.withChildCount
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,6 +40,8 @@ import org.mockito.quality.Strictness
 
 @RunWith(AndroidJUnit4::class)
 class ItemDiffingInstrumentedTest {
+
+    enum class DiffExecutorMode { SYNC, ASYNC }
 
     @get:Rule
     val dataBindingIdlingResourceRule = DataBindingIdlingResourceRule()
@@ -62,20 +67,40 @@ class ItemDiffingInstrumentedTest {
     }
 
     @Test
-    fun insertSingle() {
+    fun insertSingleSync() {
+        insertSingle(DiffExecutorMode.SYNC)
+    }
+
+    @Test
+    fun insertSingleAsync() {
+        insertSingle(DiffExecutorMode.ASYNC)
+    }
+
+    private fun insertSingle(diffExecutorMode: DiffExecutorMode) {
         runTest(
             initialItems = listOf(A, B, C),
             updatedItems = listOf(A, B, D, C),
+            diffExecutorMode = diffExecutorMode,
         )
         verify(adapterDataObserver).onItemRangeInserted(2, 1)
         verifyNoMoreInteractions(adapterDataObserver)
     }
 
     @Test
-    fun insertMultiple() {
+    fun insertMultipleSync() {
+        insertMultiple(DiffExecutorMode.SYNC)
+    }
+
+    @Test
+    fun insertMultipleAsync() {
+        insertMultiple(DiffExecutorMode.ASYNC)
+    }
+
+    private fun insertMultiple(diffExecutorMode: DiffExecutorMode) {
         runTest(
             initialItems = listOf(A, B, D),
             updatedItems = listOf(A, B, C, D, E),
+            diffExecutorMode = diffExecutorMode,
         )
         inOrder(adapterDataObserver).apply {
             verify(adapterDataObserver).onItemRangeInserted(3, 1)
@@ -84,9 +109,16 @@ class ItemDiffingInstrumentedTest {
         verifyNoMoreInteractions(adapterDataObserver)
     }
 
-    private fun runTest(initialItems: List<NoteViewModel>, updatedItems: List<NoteViewModel>) {
-        checkRecyclerViewItems(listOf())
+    private fun runTest(
+        initialItems: List<NoteViewModel>,
+        updatedItems: List<NoteViewModel>,
+        diffExecutorMode: DiffExecutorMode,
+    ) = when (diffExecutorMode) {
+        DiffExecutorMode.SYNC -> runTestSync(initialItems, updatedItems)
+        DiffExecutorMode.ASYNC -> runTestAsync(initialItems, updatedItems)
+    }
 
+    private fun runTestSync(initialItems: List<NoteViewModel>, updatedItems: List<NoteViewModel>) {
         viewModel.dabirvaData.value = DabirvaData(
             items = initialItems,
         )
@@ -97,6 +129,37 @@ class ItemDiffingInstrumentedTest {
             viewModel.dabirvaData.value = DabirvaData(
                 items = updatedItems,
             )
+            checkRecyclerViewItems(updatedItems)
+        }
+    }
+
+    private fun runTestAsync(
+        initialItems: List<NoteViewModel>,
+        updatedItems: List<NoteViewModel>,
+    ) {
+        val diffExecutor = TrampolineExecutor()
+
+        // The initial insert is done synchronously by AsyncListDiffer.
+        viewModel.dabirvaData.value = DabirvaData(
+            items = initialItems,
+            diffExecutor = diffExecutor,
+        )
+
+        checkRecyclerViewItems(initialItems)
+
+        runWithAdapterDataObserver {
+            viewModel.dabirvaData.value = DabirvaData(
+                items = updatedItems,
+                diffExecutor = diffExecutor,
+            )
+
+            assertEquals(0, diffExecutor.executedCommandsCount)
+
+            // Dummy check which loops the main thread until it is idle which runs the item diffing.
+            onView(withId(R.id.recycler_view)) //
+                .check(matches(isDisplayed()))
+
+            assertEquals(1, diffExecutor.executedCommandsCount)
             checkRecyclerViewItems(updatedItems)
         }
     }
