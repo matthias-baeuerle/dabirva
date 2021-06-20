@@ -1,6 +1,7 @@
 package com.matbadev.dabirva.decoration
 
 import android.graphics.Canvas
+import android.graphics.Rect
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +16,13 @@ abstract class StickyHeaderDecoration(
 
     private var currentHeaderViewHolder: DataBindingViewHolder? = null
 
+    // Ensure deprecated method is not used
+    final override fun onDraw(c: Canvas, parent: RecyclerView) {
+    }
+
+    @CallSuper
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+        super.onDrawOver(canvas, parent, state)
         if (parent.layoutManager == null) return
 
         val dabirva: Dabirva = parent.requireDabirva()
@@ -75,6 +82,14 @@ abstract class StickyHeaderDecoration(
         }
     }
 
+    // Ensure deprecated method is not used
+    final override fun onDrawOver(canvas: Canvas, parent: RecyclerView) {
+    }
+
+    // Ensure deprecated method is not used
+    final override fun getItemOffsets(outRect: Rect, itemPosition: Int, parent: RecyclerView) {
+    }
+
     @CallSuper
     protected open fun onBoundHeaderViewHolder(
         parent: RecyclerView,
@@ -84,12 +99,14 @@ abstract class StickyHeaderDecoration(
     ) {
     }
 
-    protected abstract fun onDrawHeaderOverItems(
+    @CallSuper
+    protected open fun onDrawHeaderOverItems(
         canvas: Canvas,
         parent: RecyclerView,
         state: RecyclerView.State,
         dabirva: Dabirva,
         headerViewHolder: DataBindingViewHolder,
-    )
+    ) {
+    }
 
 }
