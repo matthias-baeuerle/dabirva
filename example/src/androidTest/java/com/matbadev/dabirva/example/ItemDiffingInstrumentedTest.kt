@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -294,19 +293,13 @@ class ItemDiffingInstrumentedTest {
         val recyclerViewAdapter = checkNotNull(recyclerView.adapter)
         recyclerViewAdapter.registerAdapterDataObserver(adapterDataObserver)
         try {
+            assertEquals(0, diffExecutor.executedCommandsCount)
             viewModel.dabirvaData.value = DabirvaData(
                 items = updatedItems,
                 diffExecutor = diffExecutor,
             )
-
-            assertEquals(0, diffExecutor.executedCommandsCount)
-
-            // Dummy check which loops the main thread until it is idle which runs the item diffing.
-            onView(withId(R.id.recycler_view)) //
-                .check(matches(isDisplayed()))
-
+            checkRecyclerViewItems(updatedItems) // Loops the main thread until it is idle which runs the item diffing.
             assertEquals(1, diffExecutor.executedCommandsCount)
-            checkRecyclerViewItems(updatedItems)
         } finally {
             recyclerViewAdapter.unregisterAdapterDataObserver(adapterDataObserver)
         }
