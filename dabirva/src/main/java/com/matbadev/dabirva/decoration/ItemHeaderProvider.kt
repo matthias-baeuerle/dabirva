@@ -16,4 +16,18 @@ class ItemHeaderProvider(
         return RecyclerView.NO_POSITION
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ItemHeaderProvider) return false
+        return headerPredicate == other.headerPredicate
+    }
+
+    override fun hashCode(): Int {
+        return headerPredicate.hashCode()
+    }
+
+    override fun toString(): String {
+        return "ItemHeaderProvider(headerPredicate=$headerPredicate)"
+    }
+
 }

@@ -27,8 +27,6 @@ class Dabirva(
             onDataChanged(oldData, newData)
         }
 
-    private val decorationUpdater = RecyclerViewDecorationUpdater()
-
     private var itemsDiffer: ConfigAsyncListDiffer<Diffable>? = null
 
     private var attachedRecyclerView: RecyclerView? = null
@@ -146,7 +144,11 @@ class Dabirva(
         recyclerView: RecyclerView,
         newDecorations: List<RecyclerView.ItemDecoration>,
     ) {
-        decorationUpdater.updateDecorations(recyclerView, newDecorations)
+        RecyclerViewDecorationUpdater.updateDecorations(recyclerView, newDecorations)
+    }
+
+    override fun toString(): String {
+        return "Dabirva(data=$data)"
     }
 
 }

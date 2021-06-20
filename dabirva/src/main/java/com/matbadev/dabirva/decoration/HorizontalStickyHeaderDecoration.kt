@@ -49,6 +49,7 @@ class HorizontalStickyHeaderDecoration(
         dabirva: Dabirva,
         headerViewHolder: DataBindingViewHolder,
     ) {
+        super.onDrawHeaderOverItems(canvas, parent, state, dabirva, headerViewHolder)
         val headerView: View = headerViewHolder.itemView
         val childInContact: View? = getChildInContact(parent, headerView.right)
         canvas.save()
@@ -74,6 +75,20 @@ class HorizontalStickyHeaderDecoration(
     private fun isItemSticky(parent: RecyclerView, items: List<ItemViewModel>, itemView: View): Boolean {
         val adapterPosition: Int = parent.getChildAdapterPosition(itemView)
         return headerPositionProvider.getHeaderPositionForItem(adapterPosition, items) == adapterPosition
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is HorizontalStickyHeaderDecoration) return false
+        return headerPositionProvider == other.headerPositionProvider
+    }
+
+    override fun hashCode(): Int {
+        return headerPositionProvider.hashCode()
+    }
+
+    override fun toString(): String {
+        return "HorizontalStickyHeaderDecoration(headerPositionProvider=$headerPositionProvider)"
     }
 
 }
