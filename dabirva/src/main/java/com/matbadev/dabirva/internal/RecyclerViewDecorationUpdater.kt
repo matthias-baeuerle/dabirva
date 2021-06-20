@@ -3,7 +3,7 @@ package com.matbadev.dabirva.internal
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 
-internal class RecyclerViewDecorationUpdater {
+internal object RecyclerViewDecorationUpdater {
 
     fun updateDecorations(recyclerView: RecyclerView, decorations: List<ItemDecoration>) {
         val existingDecorations: List<ItemDecoration> = collectDecorations(recyclerView)

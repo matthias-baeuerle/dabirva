@@ -14,8 +14,6 @@ class NonNullObservableField<T : Any>(
         return super.get() ?: throw AssertionError("ObservableField.get() returned null although initial value was set")
     }
 
-    // Overwrite required to mark value as non-null
-    @Suppress("RedundantOverride")
     override fun set(value: T) {
         super.set(value)
     }
