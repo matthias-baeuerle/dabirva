@@ -61,9 +61,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           report_paths: ./*/build/test-results/**/*.xml
 
-      - name: List files
-        run: find ./build
-
       # https://github.com/marketplace/actions/codecov
       - name: Publish test coverage to codecov
         uses: codecov/codecov-action@v1
