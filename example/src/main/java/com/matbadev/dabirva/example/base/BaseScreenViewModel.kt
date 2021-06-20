@@ -1,6 +1,7 @@
 package com.matbadev.dabirva.example.base
 
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.annotation.AnyThread
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModel
@@ -8,7 +9,7 @@ import com.matbadev.dabirva.example.util.UnicastObservableQueue
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 
-abstract class BaseScreenViewModel<E, A : BaseScreenArguments> : ViewModel() {
+abstract class BaseScreenViewModel<A : Parcelable, E> : ViewModel() {
 
     companion object {
         const val SCREEN_ARGUMENTS_KEY = "screenArguments"
@@ -25,7 +26,7 @@ abstract class BaseScreenViewModel<E, A : BaseScreenArguments> : ViewModel() {
     fun registerUi(intentExtras: Bundle?, savedInstanceState: Bundle?, uiEventHandler: UiEventHandler<E>) {
         if (firstCreationDone.compareAndSet(false, true)) {
             Timber.d("Initializing ViewModel $this with intent extras $intentExtras and savedInstanceState $savedInstanceState")
-            val screenArguments: A? = intentExtras?.getParcelable<A>(SCREEN_ARGUMENTS_KEY)
+            val screenArguments: A? = intentExtras?.getParcelable(SCREEN_ARGUMENTS_KEY)
             initWithArguments(screenArguments)
             if (savedInstanceState != null) {
                 // App process was killed by OS
@@ -44,6 +45,7 @@ abstract class BaseScreenViewModel<E, A : BaseScreenArguments> : ViewModel() {
         screenUiEvents.stopObserving()
     }
 
+    @CallSuper
     open fun initWithArguments(arguments: A?) {
     }
 
@@ -63,9 +65,11 @@ abstract class BaseScreenViewModel<E, A : BaseScreenArguments> : ViewModel() {
         targetBundle.putBundle(VIEW_MODEL_STATE_KEY, viewModelState)
     }
 
+    @CallSuper
     open fun onSaveViewModelState(viewModelState: Bundle) {
     }
 
+    @CallSuper
     open fun onRestoreViewModelState(viewModelState: Bundle) {
     }
 

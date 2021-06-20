@@ -1,4 +1,4 @@
-package com.matbadev.dabirva
+package com.matbadev.dabirva.example.util
 
 import java.util.concurrent.Executor
 import java.util.concurrent.atomic.AtomicInteger
@@ -17,8 +17,11 @@ class TrampolineExecutor : Executor {
         get() = executedCommandsCountRef.get()
 
     override fun execute(command: Runnable) {
-        command.run()
-        executedCommandsCountRef.incrementAndGet()
+        try {
+            command.run()
+        } finally {
+            executedCommandsCountRef.incrementAndGet()
+        }
     }
 
 }

@@ -35,23 +35,23 @@ jobs:
         run: ./gradlew dabirva:apiCheck $GRADLEW_ARGUMENTS
 
       - name: Run Android lint
-        run: ./gradlew dabirva:lintRelease $GRADLEW_ARGUMENTS
+        run: ./gradlew dabirva:lintDebug $GRADLEW_ARGUMENTS
 
       - name: Print Android lint results
-        run: cat ./dabirva/build/reports/lint-results-release.xml
+        run: cat ./dabirva/build/reports/lint-results-debug.xml
 
       - name: Run unit tests with coverage
-        run: ./gradlew dabirva:jacocoTestReportRelease $GRADLEW_ARGUMENTS
+        run: ./gradlew dabirva:jacocoTestReportDebug $GRADLEW_ARGUMENTS
 
       # https://github.com/marketplace/actions/android-emulator-runner
       - name: Run instrumented tests with coverage
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew dabirva:connectedReleaseAndroidTest $GRADLEW_ARGUMENTS
+          script: ./gradlew example:connectedDebugAndroidTest $GRADLEW_ARGUMENTS
 
       - name: Merge test coverage reports
-        run: ./gradlew dabirva:mergeJacocoReports $GRADLEW_ARGUMENTS
+        run: ./gradlew jacocoMergedReportDebug $GRADLEW_ARGUMENTS
 
       # https://github.com/marketplace/actions/surefire-report
       - name: Publish test results to GitHub
@@ -59,11 +59,11 @@ jobs:
         if: ${{ always() }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          report_paths: ./dabirva/build/test-results/**/*.xml
+          report_paths: ./*/build/test-results/**/*.xml
 
       # https://github.com/marketplace/actions/codecov
       - name: Publish test coverage to codecov
         uses: codecov/codecov-action@v1
         with:
-          directory: ./dabirva/build/reports/jacoco/mergeJacocoReports/
+          directory: ./build/reports/jacoco/jacocoMergedReportDebug
           fail_ci_if_error: true

@@ -23,10 +23,10 @@ class NoteRepository {
 
     private fun generateNotes(notesPerPriority: Int): List<Note> {
         return NotePriority.values().flatMapIndexed { priorityIndex: Int, priority: NotePriority ->
-            Sequence {
+            Iterable {
                 NoteIterator(
                     notesCount = notesPerPriority,
-                    initialNoteId = (priorityIndex * notesPerPriority) + 1L,
+                    initialNoteId = (priorityIndex * notesPerPriority).toLong(),
                     priority = priority,
                 )
             }
@@ -41,7 +41,7 @@ class NoteRepository {
 
         private var nextNoteId: Long = initialNoteId
 
-        private var lastNoteId: Long = initialNoteId + notesCount - 1
+        private val lastNoteId: Long = initialNoteId + notesCount - 1
 
         override fun hasNext(): Boolean {
             return nextNoteId <= lastNoteId
@@ -51,7 +51,7 @@ class NoteRepository {
             val noteId: Long = nextNoteId++
             return Note(
                 id = noteId,
-                text = "Note #$noteId",
+                text = "Note $noteId",
                 color = MATERIAL_COLORS_100[noteId.toInt() % MATERIAL_COLORS_100.size],
                 priority = priority,
             )

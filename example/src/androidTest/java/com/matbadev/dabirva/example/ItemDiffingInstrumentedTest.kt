@@ -1,16 +1,31 @@
-package com.matbadev.dabirva
+package com.matbadev.dabirva.example
 
-import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
+import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import com.matbadev.dabirva.TestItemViewModels.A
-import com.matbadev.dabirva.TestItemViewModels.B
-import com.matbadev.dabirva.TestItemViewModels.C
-import com.matbadev.dabirva.TestItemViewModels.D
-import com.matbadev.dabirva.TestItemViewModels.E
+import com.matbadev.dabirva.DabirvaData
+import com.matbadev.dabirva.example.NoteViewModels.A
+import com.matbadev.dabirva.example.NoteViewModels.B
+import com.matbadev.dabirva.example.NoteViewModels.C
+import com.matbadev.dabirva.example.NoteViewModels.D
+import com.matbadev.dabirva.example.NoteViewModels.E
+import com.matbadev.dabirva.example.ui.NoteViewModel
+import com.matbadev.dabirva.example.ui.diffing.ItemDiffingActivity
+import com.matbadev.dabirva.example.ui.diffing.ItemDiffingActivityViewModel
+import com.matbadev.dabirva.example.util.DataBindingIdlingResourceRule
+import com.matbadev.dabirva.example.util.TrampolineExecutor
+import com.matbadev.dabirva.example.util.atViewPosition
+import com.matbadev.dabirva.example.util.useActivity
+import com.matbadev.dabirva.example.util.withChildCount
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,18 +38,32 @@ import org.mockito.junit.MockitoRule
 import org.mockito.quality.Strictness
 
 @RunWith(AndroidJUnit4::class)
-class DabirvaItemsDiffingInstrumentedTest {
+class ItemDiffingInstrumentedTest {
 
     enum class DiffExecutorMode { SYNC, ASYNC }
 
-    @Rule
-    @JvmField
-    var mockitoRule: MockitoRule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS)
+    @get:Rule
+    val dataBindingIdlingResourceRule = DataBindingIdlingResourceRule()
 
-    private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
+    @get:Rule
+    val mockitoRule: MockitoRule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS)
+
+    @get:Rule
+    val activityScenarioRule: ActivityScenarioRule<ItemDiffingActivity> = activityScenarioRule()
+
+    private val scenario: ActivityScenario<ItemDiffingActivity>
+        get() = activityScenarioRule.scenario
 
     @Mock
     private lateinit var adapterDataObserver: AdapterDataObserver
+
+    private lateinit var viewModel: ItemDiffingActivityViewModel
+
+    @Before
+    fun prepare() {
+        dataBindingIdlingResourceRule.setScenario(scenario)
+        viewModel = scenario.useActivity { it.viewModel }
+    }
 
     @Test
     fun insertSingleSync() {
@@ -68,8 +97,8 @@ class DabirvaItemsDiffingInstrumentedTest {
 
     private fun insertMultiple(diffExecutorMode: DiffExecutorMode) {
         runTest(
-            initialItems = listOf(A, B, C),
-            updatedItems = listOf(A, B, D, C, E),
+            initialItems = listOf(A, B, D),
+            updatedItems = listOf(A, B, C, D, E),
             diffExecutorMode = diffExecutorMode,
         )
         inOrder(adapterDataObserver).apply {
@@ -134,8 +163,8 @@ class DabirvaItemsDiffingInstrumentedTest {
 
     private fun changeSingle(diffExecutorMode: DiffExecutorMode) {
         runTest(
-            initialItems = listOf(A, TestItemViewModel(2, "initial"), C),
-            updatedItems = listOf(A, TestItemViewModel(2, "updated"), C),
+            initialItems = listOf(A, NoteViewModel(2, "initial"), C),
+            updatedItems = listOf(A, NoteViewModel(2, "updated"), C),
             diffExecutorMode = diffExecutorMode,
         )
         verify(adapterDataObserver).onItemRangeChanged(1, 1, null)
@@ -154,8 +183,8 @@ class DabirvaItemsDiffingInstrumentedTest {
 
     private fun changeMultiple(diffExecutorMode: DiffExecutorMode) {
         runTest(
-            initialItems = listOf(A, TestItemViewModel(2, "initial"), C, TestItemViewModel(4, "initial")),
-            updatedItems = listOf(A, TestItemViewModel(2, "updated"), C, TestItemViewModel(4, "updated")),
+            initialItems = listOf(A, NoteViewModel(2, "initial"), C, NoteViewModel(4, "initial")),
+            updatedItems = listOf(A, NoteViewModel(2, "updated"), C, NoteViewModel(4, "updated")),
             diffExecutorMode = diffExecutorMode,
         )
         inOrder(adapterDataObserver).apply {
@@ -201,7 +230,7 @@ class DabirvaItemsDiffingInstrumentedTest {
             updatedItems = listOf(D, A, C, B),
             diffExecutorMode = diffExecutorMode,
         )
-        inOrder(adapterDataObserver).apply {
+        inOrder(adapterDataObserver).apply { //
             // A  B  C  D
             //    |<<|     (first call)
             // A  C  B  D
@@ -214,53 +243,75 @@ class DabirvaItemsDiffingInstrumentedTest {
     }
 
     private fun runTest(
-        initialItems: List<ItemViewModel>,
-        updatedItems: List<ItemViewModel>,
+        initialItems: List<NoteViewModel>,
+        updatedItems: List<NoteViewModel>,
         diffExecutorMode: DiffExecutorMode,
     ) = when (diffExecutorMode) {
         DiffExecutorMode.SYNC -> runTestSync(initialItems, updatedItems)
         DiffExecutorMode.ASYNC -> runTestAsync(initialItems, updatedItems)
     }
 
-    private fun runTestSync(initialItems: List<ItemViewModel>, updatedItems: List<ItemViewModel>) {
-        val recyclerView = RecyclerView(context)
-        val adapter = Dabirva(
-            initialData = DabirvaData(
-                items = initialItems,
-            ),
-        )
-        adapter.registerAdapterDataObserver(adapterDataObserver)
-        adapter.attachRecyclerView(recyclerView)
-        adapter.data = adapter.data.copy(
-            items = updatedItems,
-        )
-    }
+    private fun runTestSync(initialItems: List<NoteViewModel>, updatedItems: List<NoteViewModel>) {
+        val recyclerView: RecyclerView = scenario.useActivity { it.findViewById(R.id.recycler_view) }
+        recyclerView.itemAnimator = null
 
-    private fun runTestAsync(initialItems: List<ItemViewModel>, updatedItems: List<ItemViewModel>) {
-        val diffExecutor = TrampolineExecutor()
-        val recyclerView = RecyclerView(context)
-        val adapter = Dabirva(
-            initialData = DabirvaData(
-                diffExecutor = diffExecutor,
-            ),
-        )
-
-        adapter.setItemsDifferMainThreadExecutor(diffExecutor)
-
-        // The initial insert happens synchronously.
-        adapter.data = adapter.data.copy(
+        viewModel.dabirvaData.value = DabirvaData(
             items = initialItems,
         )
-        assertEquals(0, diffExecutor.executedCommandsCount)
 
-        // Subsequent inserts happen asynchronously,
-        // one call to diffExecutor for changing to the worker thread and another one to change back to the main thread.
-        adapter.registerAdapterDataObserver(adapterDataObserver)
-        adapter.attachRecyclerView(recyclerView)
-        adapter.data = adapter.data.copy(
-            items = updatedItems,
+        checkRecyclerViewItems(initialItems)
+
+        val recyclerViewAdapter = checkNotNull(recyclerView.adapter)
+        recyclerViewAdapter.registerAdapterDataObserver(adapterDataObserver)
+        try {
+            viewModel.dabirvaData.value = DabirvaData(
+                items = updatedItems,
+            )
+
+            checkRecyclerViewItems(updatedItems)
+        } finally {
+            recyclerViewAdapter.unregisterAdapterDataObserver(adapterDataObserver)
+        }
+    }
+
+    private fun runTestAsync(
+        initialItems: List<NoteViewModel>,
+        updatedItems: List<NoteViewModel>,
+    ) {
+        val diffExecutor = TrampolineExecutor()
+        val recyclerView: RecyclerView = scenario.useActivity { it.findViewById(R.id.recycler_view) }
+        recyclerView.itemAnimator = null
+
+        // The initial insert is done synchronously by AsyncListDiffer.
+        viewModel.dabirvaData.value = DabirvaData(
+            items = initialItems,
+            diffExecutor = diffExecutor,
         )
-        assertEquals(2, diffExecutor.executedCommandsCount)
+
+        checkRecyclerViewItems(initialItems)
+
+        val recyclerViewAdapter = checkNotNull(recyclerView.adapter)
+        recyclerViewAdapter.registerAdapterDataObserver(adapterDataObserver)
+        try {
+            assertEquals(0, diffExecutor.executedCommandsCount)
+            viewModel.dabirvaData.value = DabirvaData(
+                items = updatedItems,
+                diffExecutor = diffExecutor,
+            )
+            checkRecyclerViewItems(updatedItems) // Loops the main thread until it is idle which runs the item diffing.
+            assertEquals(1, diffExecutor.executedCommandsCount)
+        } finally {
+            recyclerViewAdapter.unregisterAdapterDataObserver(adapterDataObserver)
+        }
+    }
+
+    private fun checkRecyclerViewItems(expectedItems: List<NoteViewModel>) {
+        onView(withId(R.id.recycler_view)) //
+            .check(matches(withChildCount(expectedItems.size)))
+        expectedItems.forEachIndexed { index, noteViewModel ->
+            onView(atViewPosition(R.id.recycler_view, index)) //
+                .check(matches(withText(noteViewModel.text)))
+        }
     }
 
 }

@@ -5,6 +5,7 @@ buildscript {
         KOTLIN_VERSION = "1.5.10"
         DOKKA_VERSION = "1.4.32"
         ANDROID_GRADLE_PLUGIN_VERSION = "4.2.1"
+        JACOCO_VERSION = "0.8.7"
     }
 
     repositories {
@@ -25,6 +26,11 @@ buildscript {
 
 plugins {
     id "org.jetbrains.kotlinx.binary-compatibility-validator" version "0.5.0"
+    id "jacoco"
+}
+
+jacoco {
+    toolVersion = JACOCO_VERSION
 }
 
 allprojects {
@@ -46,4 +52,32 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+// Task name is used as report file name and that must correspond to a pattern recognized by codecov-bash:
+// https://github.com/codecov/codecov-bash/blob/master/codecov
+task jacocoMergedReportDebug(type: JacocoReport) {
+    group = "reporting"
+    description = "Collect Jacoco coverage data of dabirva and example module into a single report"
+
+    reports {
+        xml.enabled = true
+        html.enabled = false
+        csv.enabled = false
+    }
+
+    sourceDirectories.setFrom fileTree(dir: projectDir, includes: [
+            "dabirva/src/main/java/**/*",
+    ])
+    classDirectories.setFrom fileTree(dir: projectDir, includes: [
+            "dabirva/build/tmp/kotlin-classes/debug/**/*",
+    ])
+    executionData.setFrom fileTree(dir: projectDir, includes: [
+            // Unit tests coverage
+            "dabirva/*.exec",
+            "example/*.exec",
+            // Instrumented tests coverage
+            "dabirva/build/outputs/code_coverage/**/*.ec",
+            "example/build/outputs/code_coverage/**/*.ec",
+    ])
 }
