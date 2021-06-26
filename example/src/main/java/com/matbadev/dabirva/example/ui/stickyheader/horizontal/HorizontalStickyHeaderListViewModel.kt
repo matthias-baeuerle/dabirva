@@ -35,7 +35,7 @@ class HorizontalStickyHeaderListViewModel(
     private fun buildHorizontalGroupViewModels(noteEntry: Map.Entry<NotePriority, List<Note>>): Sequence<ItemViewModel> {
         return sequence {
             yield(HeaderColumnViewModel(
-                id = noteEntry.key.ordinal.toLong(),
+                priority = noteEntry.key,
                 text = noteEntry.key.name,
             ))
             noteEntry.value.forEach { note: Note ->
