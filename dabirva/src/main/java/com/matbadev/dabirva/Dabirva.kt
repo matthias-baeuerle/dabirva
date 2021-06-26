@@ -32,7 +32,7 @@ class Dabirva(
     private var attachedRecyclerView: RecyclerView? = null
 
     init {
-        setHasStableIds(true)
+        setHasStableIds(false)
         refreshItemsDiffer(null, initialData.diffExecutor)
     }
 
@@ -46,11 +46,6 @@ class Dabirva(
 
     override fun getItemCount(): Int {
         return data.items.size
-    }
-
-    override fun getItemId(position: Int): Long {
-        val item: ItemViewModel = data.items[position]
-        return item.id
     }
 
     override fun getItemViewType(position: Int): Int {

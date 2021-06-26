@@ -2,7 +2,7 @@ package com.matbadev.dabirva
 
 interface Diffable {
 
-    val id: Long
+    fun entityEquals(other: Any?): Boolean
 
     override operator fun equals(other: Any?): Boolean
 

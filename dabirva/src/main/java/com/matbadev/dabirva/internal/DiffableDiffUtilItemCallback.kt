@@ -6,7 +6,7 @@ import com.matbadev.dabirva.Diffable
 internal class DiffableDiffUtilItemCallback : DiffUtil.ItemCallback<Diffable>() {
 
     override fun areItemsTheSame(oldItem: Diffable, newItem: Diffable): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem.entityEquals(newItem)
     }
 
     override fun areContentsTheSame(oldItem: Diffable, newItem: Diffable): Boolean {
