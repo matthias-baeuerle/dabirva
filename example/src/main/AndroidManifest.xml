@@ -22,7 +22,7 @@
             android:parentActivityName=".ui.launch.LaunchActivity" />
 
         <activity
-            android:name=".ui.diffing.ItemDiffingActivity"
+            android:name=".ui.test.TestActivity"
             android:exported="true"
             android:label="@string/item_diffing_title"
             android:parentActivityName=".ui.launch.LaunchActivity" />
