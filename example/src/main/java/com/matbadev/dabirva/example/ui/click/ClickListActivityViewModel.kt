@@ -21,9 +21,10 @@ class ClickListActivityViewModel(
                 ClickableNoteViewModel(
                     id = note.id,
                     text = note.text,
-                    onItemClick = ::onItemClick,
-                    onItemLongClick = ::onItemLongClick,
-                )
+                ).apply {
+                    onItemClick = ::onItemClick
+                    onItemLongClick = ::onItemLongClick
+                }
             },
         )
     }
@@ -34,11 +35,10 @@ class ClickListActivityViewModel(
         ))
     }
 
-    private fun onItemLongClick(item: ClickableNoteViewModel): Boolean {
+    private fun onItemLongClick(item: ClickableNoteViewModel) {
         queueCommonUiEvent(ShowToastEvent(
             messageProvider = { "Long clicked: ${item.text}" },
         ))
-        return true
     }
 
 }

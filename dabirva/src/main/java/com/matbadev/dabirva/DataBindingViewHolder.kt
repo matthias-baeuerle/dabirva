@@ -13,7 +13,9 @@ class DataBindingViewHolder(
 
     @MainThread
     fun bindViewModel(viewModel: ItemViewModel) {
-        binding.setVariable(viewModel.bindingId, viewModel)
+        if (!binding.setVariable(viewModel.bindingId, viewModel)) {
+            throw UnsupportedOperationException("Variable with ID ${viewModel.bindingId} is not used in layout with ID ${viewModel.layoutId}")
+        }
         binding.executePendingBindings()
         boundViewModel = viewModel
     }

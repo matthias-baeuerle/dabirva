@@ -13,7 +13,6 @@ import com.matbadev.dabirva.internal.ConfigAsyncListDiffer
 import com.matbadev.dabirva.internal.DiffableDiffUtilCallback
 import com.matbadev.dabirva.internal.DiffableDiffUtilItemCallback
 import com.matbadev.dabirva.internal.RecyclerViewDecorationUpdater
-import java.lang.reflect.Field
 import java.util.concurrent.Executor
 
 class Dabirva(
@@ -31,8 +30,9 @@ class Dabirva(
 
     private var attachedRecyclerView: RecyclerView? = null
 
-    init {
-        setHasStableIds(true)
+    init { // Stable IDs are not required when using DiffUtil.
+        // See: https://stackoverflow.com/a/62281250/
+        setHasStableIds(false)
         refreshItemsDiffer(null, initialData.diffExecutor)
     }
 
@@ -46,11 +46,6 @@ class Dabirva(
 
     override fun getItemCount(): Int {
         return data.items.size
-    }
-
-    override fun getItemId(position: Int): Long {
-        val item: ItemViewModel = data.items[position]
-        return item.id
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -107,22 +102,6 @@ class Dabirva(
                 null
             }
         }
-    }
-
-    /**
-     * Use reflection to change the executor which [AsyncListDiffer] uses to return the async diffing results.
-     *
-     * By default [AsyncListDiffer] uses [android.os.Looper.getMainLooper] for this
-     * which can cause race conditions in tests as it queues a task for the next loop
-     * instead of dispatching it immediately.
-     */
-    @VisibleForTesting
-    internal fun setItemsDifferMainThreadExecutor(mainThreadExecutor: Executor) {
-        val currentItemsDiffer: ConfigAsyncListDiffer<Diffable> =
-            itemsDiffer ?: throw IllegalStateException("No items differ set")
-        val mainThreadExecutorField: Field = AsyncListDiffer::class.java.getDeclaredField("mMainThreadExecutor")
-        mainThreadExecutorField.isAccessible = true
-        mainThreadExecutorField.set(currentItemsDiffer, mainThreadExecutor)
     }
 
     private fun refreshItemsInAdapter(oldItems: List<ItemViewModel>, newItems: List<ItemViewModel>) {
