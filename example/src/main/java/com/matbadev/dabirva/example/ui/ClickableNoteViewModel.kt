@@ -2,15 +2,18 @@ package com.matbadev.dabirva.example.ui
 
 import com.matbadev.dabirva.example.R
 import com.matbadev.dabirva.example.base.BaseItemViewModel
+import com.matbadev.dabirva.example.util.ItemClickListener
 
 data class ClickableNoteViewModel(
     val id: Long,
     val text: String,
-    val onItemClick: (item: ClickableNoteViewModel) -> Unit,
-    val onItemLongClick: (item: ClickableNoteViewModel) -> Boolean,
 ) : BaseItemViewModel() {
 
     override val layoutId: Int = R.layout.item_note_clickable
+
+    lateinit var onItemClick: ItemClickListener<ClickableNoteViewModel>
+
+    lateinit var onItemLongClick: ItemClickListener<ClickableNoteViewModel>
 
     override fun entityEquals(other: Any?): Boolean {
         return other is ClickableNoteViewModel && id == other.id
@@ -21,7 +24,8 @@ data class ClickableNoteViewModel(
     }
 
     fun onLongClick(): Boolean {
-        return onItemLongClick(this)
+        onItemLongClick(this)
+        return true
     }
 
 }

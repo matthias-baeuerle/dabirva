@@ -17,11 +17,12 @@ import com.matbadev.dabirva.example.NoteViewModels.C
 import com.matbadev.dabirva.example.NoteViewModels.D
 import com.matbadev.dabirva.example.NoteViewModels.E
 import com.matbadev.dabirva.example.ui.NoteViewModel
-import com.matbadev.dabirva.example.ui.diffing.ItemDiffingActivity
-import com.matbadev.dabirva.example.ui.diffing.ItemDiffingActivityViewModel
+import com.matbadev.dabirva.example.ui.test.TestActivity
+import com.matbadev.dabirva.example.ui.test.TestActivityViewModel
 import com.matbadev.dabirva.example.util.DataBindingIdlingResourceRule
 import com.matbadev.dabirva.example.util.TrampolineExecutor
 import com.matbadev.dabirva.example.util.atViewPosition
+import com.matbadev.dabirva.example.util.loopMainThreadUntilIdle
 import com.matbadev.dabirva.example.util.useActivity
 import com.matbadev.dabirva.example.util.withChildCount
 import org.junit.Assert.assertEquals
@@ -49,15 +50,15 @@ class ItemDiffingInstrumentedTest {
     val mockitoRule: MockitoRule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS)
 
     @get:Rule
-    val activityScenarioRule: ActivityScenarioRule<ItemDiffingActivity> = activityScenarioRule()
+    val activityScenarioRule: ActivityScenarioRule<TestActivity> = activityScenarioRule()
 
-    private val scenario: ActivityScenario<ItemDiffingActivity>
+    private val scenario: ActivityScenario<TestActivity>
         get() = activityScenarioRule.scenario
 
     @Mock
     private lateinit var adapterDataObserver: AdapterDataObserver
 
-    private lateinit var viewModel: ItemDiffingActivityViewModel
+    private lateinit var viewModel: TestActivityViewModel
 
     @Before
     fun prepare() {
@@ -298,8 +299,9 @@ class ItemDiffingInstrumentedTest {
                 items = updatedItems,
                 diffExecutor = diffExecutor,
             )
-            checkRecyclerViewItems(updatedItems) // Loops the main thread until it is idle which runs the item diffing.
+            loopMainThreadUntilIdle() // Executes the item diffing
             assertEquals(1, diffExecutor.executedCommandsCount)
+            checkRecyclerViewItems(updatedItems)
         } finally {
             recyclerViewAdapter.unregisterAdapterDataObserver(adapterDataObserver)
         }

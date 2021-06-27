@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.matbadev.dabirva.example.ui.diffing.ItemDiffingActivityViewModel" />
+            type="com.matbadev.dabirva.example.ui.test.TestActivityViewModel" />
     </data>
 
     <androidx.recyclerview.widget.RecyclerView
