@@ -7,7 +7,6 @@ import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.matbadev.dabirva.DabirvaData
 import com.matbadev.dabirva.example.ui.ClickableNoteViewModel
 import com.matbadev.dabirva.example.ui.test.TestActivity
 import com.matbadev.dabirva.example.ui.test.TestActivityViewModel
@@ -53,9 +52,7 @@ class ListenerInstrumentedTest {
         itemViewModel.onItemClick = {
             listenerCalled = true
         }
-        viewModel.dabirvaData.value = DabirvaData(
-            items = listOf(itemViewModel),
-        )
+        viewModel.items.value = listOf(itemViewModel)
 
         onView(atViewPosition(R.id.recycler_view, 0)).perform(click())
 
@@ -69,9 +66,7 @@ class ListenerInstrumentedTest {
         itemViewModel.onItemLongClick = {
             listenerCalled = true
         }
-        viewModel.dabirvaData.value = DabirvaData(
-            items = listOf(itemViewModel),
-        )
+        viewModel.items.value = listOf(itemViewModel)
 
         onView(atViewPosition(R.id.recycler_view, 0)).perform(longClick())
 
@@ -88,9 +83,7 @@ class ListenerInstrumentedTest {
             firstListenerCalled = true
         }
 
-        viewModel.dabirvaData.value = DabirvaData(
-            items = listOf(itemViewModel),
-        )
+        viewModel.items.value = listOf(itemViewModel)
 
         loopMainThreadUntilIdle()
 

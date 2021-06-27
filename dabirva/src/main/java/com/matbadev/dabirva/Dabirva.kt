@@ -16,14 +16,31 @@ import com.matbadev.dabirva.internal.RecyclerViewDecorationUpdater
 import java.util.concurrent.Executor
 
 class Dabirva(
-    initialData: DabirvaData,
+    initialItems: List<ItemViewModel> = listOf(),
+    initialItemDecorations: List<RecyclerView.ItemDecoration> = listOf(),
+    initialDiffExecutor: Executor? = null,
 ) : RecyclerView.Adapter<DataBindingViewHolder>() {
 
-    var data: DabirvaData = initialData
-        set(newData) {
-            val oldData = field
-            field = newData
-            onDataChanged(oldData, newData)
+    var items: List<ItemViewModel> = initialItems
+        set(newItems) {
+            val oldItems = field
+            field = newItems
+            refreshItemsInAdapter(oldItems, newItems)
+        }
+
+    var itemDecorations: List<RecyclerView.ItemDecoration> = initialItemDecorations
+        set(newItemDecorations) {
+            field = newItemDecorations
+            attachedRecyclerView?.let { recyclerView: RecyclerView ->
+                refreshDecorationsInRecyclerView(recyclerView, newItemDecorations)
+            }
+        }
+
+    var diffExecutor: Executor? = initialDiffExecutor
+        set(newDiffExecutor) {
+            val oldDiffExecutor = field
+            field = newDiffExecutor
+            refreshItemsDiffer(oldDiffExecutor, newDiffExecutor)
         }
 
     private var itemsDiffer: ConfigAsyncListDiffer<Diffable>? = null
@@ -33,23 +50,15 @@ class Dabirva(
     init { // Stable IDs are not required when using DiffUtil.
         // See: https://stackoverflow.com/a/62281250/
         setHasStableIds(false)
-        refreshItemsDiffer(null, initialData.diffExecutor)
-    }
-
-    private fun onDataChanged(oldData: DabirvaData, newData: DabirvaData) {
-        refreshItemsDiffer(oldData.diffExecutor, newData.diffExecutor)
-        refreshItemsInAdapter(oldData.items, newData.items)
-        attachedRecyclerView?.let { recyclerView: RecyclerView ->
-            refreshDecorationsInRecyclerView(recyclerView, newData.itemDecorations)
-        }
+        refreshItemsDiffer(null, initialDiffExecutor)
     }
 
     override fun getItemCount(): Int {
-        return data.items.size
+        return items.size
     }
 
     override fun getItemViewType(position: Int): Int {
-        val item: ItemViewModel = data.items[position]
+        val item: ItemViewModel = items[position]
         return item.layoutId
     }
 
@@ -60,7 +69,7 @@ class Dabirva(
     }
 
     override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int) {
-        val item: ItemViewModel = data.items[position]
+        val item: ItemViewModel = items[position]
         holder.bindViewModel(item)
     }
 
@@ -72,7 +81,7 @@ class Dabirva(
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         attachRecyclerView(recyclerView)
-        refreshDecorationsInRecyclerView(recyclerView, data.itemDecorations)
+        refreshDecorationsInRecyclerView(recyclerView, itemDecorations)
     }
 
     @VisibleForTesting
@@ -127,7 +136,7 @@ class Dabirva(
     }
 
     override fun toString(): String {
-        return "Dabirva(data=$data)"
+        return "Dabirva(items=$items, itemDecorations=$itemDecorations, diffExecutor=$diffExecutor)"
     }
 
 }

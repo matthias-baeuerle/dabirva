@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:dabirvaData="@{viewModel.dabirvaData}"
+        app:dabirvaItems="@{viewModel.items}"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_note_row" />
 

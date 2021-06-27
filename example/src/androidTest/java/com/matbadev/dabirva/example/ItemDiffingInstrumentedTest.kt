@@ -10,7 +10,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.matbadev.dabirva.DabirvaData
 import com.matbadev.dabirva.example.NoteViewModels.A
 import com.matbadev.dabirva.example.NoteViewModels.B
 import com.matbadev.dabirva.example.NoteViewModels.C
@@ -24,6 +23,7 @@ import com.matbadev.dabirva.example.util.TrampolineExecutor
 import com.matbadev.dabirva.example.util.atViewPosition
 import com.matbadev.dabirva.example.util.loopMainThreadUntilIdle
 import com.matbadev.dabirva.example.util.useActivity
+import com.matbadev.dabirva.example.util.value
 import com.matbadev.dabirva.example.util.withChildCount
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -256,18 +256,14 @@ class ItemDiffingInstrumentedTest {
         val recyclerView: RecyclerView = scenario.useActivity { it.findViewById(R.id.recycler_view) }
         recyclerView.itemAnimator = null
 
-        viewModel.dabirvaData.value = DabirvaData(
-            items = initialItems,
-        )
+        viewModel.items.value = initialItems
 
         checkRecyclerViewItems(initialItems)
 
         val recyclerViewAdapter = checkNotNull(recyclerView.adapter)
         recyclerViewAdapter.registerAdapterDataObserver(adapterDataObserver)
         try {
-            viewModel.dabirvaData.value = DabirvaData(
-                items = updatedItems,
-            )
+            viewModel.items.value = updatedItems
 
             checkRecyclerViewItems(updatedItems)
         } finally {
@@ -284,10 +280,8 @@ class ItemDiffingInstrumentedTest {
         recyclerView.itemAnimator = null
 
         // The initial insert is done synchronously by AsyncListDiffer.
-        viewModel.dabirvaData.value = DabirvaData(
-            items = initialItems,
-            diffExecutor = diffExecutor,
-        )
+        viewModel.items.value = initialItems
+        viewModel.diffExecutor.value = diffExecutor
 
         checkRecyclerViewItems(initialItems)
 
@@ -295,10 +289,7 @@ class ItemDiffingInstrumentedTest {
         recyclerViewAdapter.registerAdapterDataObserver(adapterDataObserver)
         try {
             assertEquals(0, diffExecutor.executedCommandsCount)
-            viewModel.dabirvaData.value = DabirvaData(
-                items = updatedItems,
-                diffExecutor = diffExecutor,
-            )
+            viewModel.items.value = updatedItems
             loopMainThreadUntilIdle() // Executes the item diffing
             assertEquals(1, diffExecutor.executedCommandsCount)
             checkRecyclerViewItems(updatedItems)

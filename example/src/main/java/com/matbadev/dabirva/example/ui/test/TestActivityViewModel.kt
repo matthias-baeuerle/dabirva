@@ -1,12 +1,19 @@
 package com.matbadev.dabirva.example.ui.test
 
 import android.os.Parcelable
-import com.matbadev.dabirva.DabirvaData
+import androidx.databinding.ObservableField
+import androidx.recyclerview.widget.RecyclerView
+import com.matbadev.dabirva.ItemViewModel
 import com.matbadev.dabirva.example.base.BaseScreenViewModel
 import com.matbadev.dabirva.util.NonNullObservableField
+import java.util.concurrent.Executor
 
 class TestActivityViewModel : BaseScreenViewModel<Parcelable, TestActivityEvent>() {
 
-    val dabirvaData = NonNullObservableField(DabirvaData())
+    val items: NonNullObservableField<List<ItemViewModel>> = NonNullObservableField(listOf())
+
+    val itemDecorations: NonNullObservableField<List<RecyclerView.ItemDecoration>> = NonNullObservableField(listOf())
+
+    val diffExecutor: ObservableField<Executor?> = ObservableField()
 
 }
