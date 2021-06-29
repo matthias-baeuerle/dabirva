@@ -5,29 +5,18 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.concurrent.Executor
 
 @Suppress("CascadeIf")
-object BindingAdapters {
+object DabirvaBindingAdapters {
 
     @JvmStatic
     @BindingAdapter("dabirvaItems")
-    fun setItems(recyclerView: RecyclerView, itemViewModels: List<ItemViewModel>) {
+    fun setItems(recyclerView: RecyclerView, items: List<ItemViewModel>) {
         val currentAdapter: RecyclerView.Adapter<*>? = recyclerView.adapter
         if (currentAdapter == null) {
-            recyclerView.adapter = Dabirva(initialItems = itemViewModels)
+            val dabirva: Dabirva = DabirvaConfig.factory.create()
+            dabirva.items = items
+            recyclerView.adapter = dabirva
         } else if (currentAdapter is Dabirva) {
-            currentAdapter.items = itemViewModels
-        } else {
-            throw IllegalStateException("Different adapter already set")
-        }
-    }
-
-    @JvmStatic
-    @BindingAdapter("dabirvaItemDecorations")
-    fun setItemDecorations(recyclerView: RecyclerView, itemDecorations: List<RecyclerView.ItemDecoration>) {
-        val currentAdapter: RecyclerView.Adapter<*>? = recyclerView.adapter
-        if (currentAdapter == null) {
-            recyclerView.adapter = Dabirva(initialItemDecorations = itemDecorations)
-        } else if (currentAdapter is Dabirva) {
-            currentAdapter.itemDecorations = itemDecorations
+            currentAdapter.items = items
         } else {
             throw IllegalStateException("Different adapter already set")
         }
@@ -38,7 +27,9 @@ object BindingAdapters {
     fun setDiffExecutor(recyclerView: RecyclerView, diffExecutor: Executor?) {
         val currentAdapter: RecyclerView.Adapter<*>? = recyclerView.adapter
         if (currentAdapter == null) {
-            recyclerView.adapter = Dabirva(initialDiffExecutor = diffExecutor)
+            val dabirva: Dabirva = DabirvaConfig.factory.create()
+            dabirva.diffExecutor = diffExecutor
+            recyclerView.adapter = dabirva
         } else if (currentAdapter is Dabirva) {
             currentAdapter.diffExecutor = diffExecutor
         } else {

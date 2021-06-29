@@ -12,31 +12,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.matbadev.dabirva.internal.ConfigAsyncListDiffer
 import com.matbadev.dabirva.internal.DiffableDiffUtilCallback
 import com.matbadev.dabirva.internal.DiffableDiffUtilItemCallback
-import com.matbadev.dabirva.internal.RecyclerViewDecorationUpdater
 import java.util.concurrent.Executor
 
-class Dabirva(
-    initialItems: List<ItemViewModel> = listOf(),
-    initialItemDecorations: List<RecyclerView.ItemDecoration> = listOf(),
-    initialDiffExecutor: Executor? = null,
-) : RecyclerView.Adapter<DataBindingViewHolder>() {
+class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
 
-    var items: List<ItemViewModel> = initialItems
+    var items: List<ItemViewModel> = listOf()
         set(newItems) {
             val oldItems = field
             field = newItems
             refreshItemsInAdapter(oldItems, newItems)
         }
 
-    var itemDecorations: List<RecyclerView.ItemDecoration> = initialItemDecorations
-        set(newItemDecorations) {
-            field = newItemDecorations
-            attachedRecyclerView?.let { recyclerView: RecyclerView ->
-                refreshDecorationsInRecyclerView(recyclerView, newItemDecorations)
-            }
-        }
-
-    var diffExecutor: Executor? = initialDiffExecutor
+    var diffExecutor: Executor? = null
         set(newDiffExecutor) {
             val oldDiffExecutor = field
             field = newDiffExecutor
@@ -50,7 +37,6 @@ class Dabirva(
     init { // Stable IDs are not required when using DiffUtil.
         // See: https://stackoverflow.com/a/62281250/
         setHasStableIds(false)
-        refreshItemsDiffer(null, initialDiffExecutor)
     }
 
     override fun getItemCount(): Int {
@@ -81,7 +67,6 @@ class Dabirva(
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         attachRecyclerView(recyclerView)
-        refreshDecorationsInRecyclerView(recyclerView, itemDecorations)
     }
 
     @VisibleForTesting
@@ -128,15 +113,8 @@ class Dabirva(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun refreshDecorationsInRecyclerView(
-        recyclerView: RecyclerView,
-        newDecorations: List<RecyclerView.ItemDecoration>,
-    ) {
-        RecyclerViewDecorationUpdater.updateDecorations(recyclerView, newDecorations)
-    }
-
     override fun toString(): String {
-        return "Dabirva(items=$items, itemDecorations=$itemDecorations, diffExecutor=$diffExecutor)"
+        return "Dabirva(items=$items, diffExecutor=$diffExecutor)"
     }
 
 }
