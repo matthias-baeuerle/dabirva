@@ -10,10 +10,10 @@ import java.util.concurrent.Executor
 
 class TestActivityViewModel : BaseScreenViewModel<Parcelable, TestActivityEvent>() {
 
-    val items: NonNullObservableField<List<ItemViewModel>> = NonNullObservableField(listOf())
+    val items = NonNullObservableField<List<ItemViewModel>>(listOf())
 
-    val itemDecorations: NonNullObservableField<List<RecyclerView.ItemDecoration>> = NonNullObservableField(listOf())
+    val itemDecorations = NonNullObservableField<List<RecyclerView.ItemDecoration>>(listOf())
 
-    val diffExecutor: ObservableField<Executor?> = ObservableField()
+    val diffExecutor = ObservableField<Executor?>()
 
 }

@@ -16,6 +16,6 @@
         android:orientation="vertical"
         app:dabirvaItems="@{viewModel.items}"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_note_row" />
+        tools:listitem="@layout/item_note_clickable" />
 
 </layout>

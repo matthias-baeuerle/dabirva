@@ -15,10 +15,9 @@ object DabirvaBindingAdapters {
             val dabirva: Dabirva = DabirvaConfig.factory.create()
             dabirva.items = items
             recyclerView.adapter = dabirva
-        } else if (currentAdapter is Dabirva) {
-            currentAdapter.items = items
         } else {
-            throw IllegalStateException("Different adapter already set")
+            check(currentAdapter is Dabirva) { "Required an instance of Dabirva but was $currentAdapter" }
+            currentAdapter.items = items
         }
     }
 
@@ -30,10 +29,9 @@ object DabirvaBindingAdapters {
             val dabirva: Dabirva = DabirvaConfig.factory.create()
             dabirva.diffExecutor = diffExecutor
             recyclerView.adapter = dabirva
-        } else if (currentAdapter is Dabirva) {
-            currentAdapter.diffExecutor = diffExecutor
         } else {
-            throw IllegalStateException("Different adapter already set")
+            check(currentAdapter is Dabirva) { "Required an instance of Dabirva but was $currentAdapter" }
+            currentAdapter.diffExecutor = diffExecutor
         }
     }
 
