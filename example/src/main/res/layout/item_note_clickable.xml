@@ -19,7 +19,6 @@
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:paddingEnd="?android:attr/listPreferredItemPaddingRight"
         android:text="@{viewModel.text}"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         app:onLongClick="@{v -> viewModel.onLongClick()}"
         tools:text="Note 42" />
 
