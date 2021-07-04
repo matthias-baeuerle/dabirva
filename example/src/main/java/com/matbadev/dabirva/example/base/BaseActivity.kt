@@ -36,7 +36,7 @@ abstract class BaseActivity<A : Parcelable, E, VM : BaseScreenViewModel<A, E>>(
         binding = DataBindingUtil.setContentView(this, layoutId, null)
         binding.lifecycleOwner = this
         if (!binding.setVariable(BR.viewModel, viewModel)) {
-            throw UnsupportedOperationException("View model Variable is not used in layout with ID $layoutId")
+            throw UnsupportedOperationException("View model variable is not used in layout with ID $layoutId")
         }
         binding.executePendingBindings()
     }
