@@ -2,6 +2,7 @@ package com.matbadev.dabirva
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import androidx.annotation.VisibleForTesting
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -14,7 +15,7 @@ import com.matbadev.dabirva.internal.DiffableDiffUtilCallback
 import com.matbadev.dabirva.internal.DiffableDiffUtilItemCallback
 import java.util.concurrent.Executor
 
-class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
+open class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
 
     var items: List<ItemViewModel> = listOf()
         set(newItems) {
@@ -34,18 +35,23 @@ class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
 
     private var attachedRecyclerView: RecyclerView? = null
 
-    init { // Stable IDs are not required when using DiffUtil.
-        // See: https://stackoverflow.com/a/62281250/
-        setHasStableIds(false)
-    }
-
-    override fun getItemCount(): Int {
+    final override fun getItemCount(): Int {
         return items.size
     }
 
-    override fun getItemViewType(position: Int): Int {
+    final override fun getItemViewType(position: Int): Int {
         val item: ItemViewModel = items[position]
         return item.layoutId
+    }
+
+    // Stable IDs are not required when using DiffUtil.
+    // See: https://stackoverflow.com/a/62281250/
+    final override fun setHasStableIds(hasStableIds: Boolean) {
+        super.setHasStableIds(hasStableIds)
+    }
+
+    final override fun getItemId(position: Int): Long {
+        return super.getItemId(position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBindingViewHolder {
@@ -54,16 +60,24 @@ class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
         return DataBindingViewHolder(binding)
     }
 
+    @CallSuper
     override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int) {
         val item: ItemViewModel = items[position]
         holder.bindViewModel(item)
     }
 
+    // Payloads are not required as diffing is done using data binding.
+    final override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int, payloads: MutableList<Any>) {
+        super.onBindViewHolder(holder, position, payloads)
+    }
+
+    @CallSuper
     override fun onViewRecycled(holder: DataBindingViewHolder) {
         super.onViewRecycled(holder)
         holder.unbind()
     }
 
+    @CallSuper
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         attachRecyclerView(recyclerView)
@@ -74,6 +88,7 @@ class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
         attachedRecyclerView = recyclerView
     }
 
+    @CallSuper
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
         detachRecyclerView()
