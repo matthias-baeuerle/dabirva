@@ -12,7 +12,7 @@ object DabirvaBindingAdapters {
     fun setItems(recyclerView: RecyclerView, items: List<ItemViewModel>) {
         val currentAdapter: RecyclerView.Adapter<*>? = recyclerView.adapter
         if (currentAdapter == null) {
-            val dabirva = Dabirva()
+            val dabirva: Dabirva = DabirvaConfig.factory.create()
             dabirva.items = items
             recyclerView.adapter = dabirva
         } else {
@@ -26,7 +26,7 @@ object DabirvaBindingAdapters {
     fun setDiffExecutor(recyclerView: RecyclerView, diffExecutor: Executor?) {
         val currentAdapter: RecyclerView.Adapter<*>? = recyclerView.adapter
         if (currentAdapter == null) {
-            val dabirva = Dabirva()
+            val dabirva: Dabirva = DabirvaConfig.factory.create()
             dabirva.diffExecutor = diffExecutor
             recyclerView.adapter = dabirva
         } else {
