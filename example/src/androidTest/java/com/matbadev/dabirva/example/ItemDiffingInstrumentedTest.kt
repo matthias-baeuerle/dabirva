@@ -1,15 +1,12 @@
 package com.matbadev.dabirva.example
 
+import android.os.Parcelable
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-import androidx.test.ext.junit.rules.activityScenarioRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.matbadev.dabirva.example.NoteViewModels.A
 import com.matbadev.dabirva.example.NoteViewModels.B
 import com.matbadev.dabirva.example.NoteViewModels.C
@@ -17,8 +14,8 @@ import com.matbadev.dabirva.example.NoteViewModels.D
 import com.matbadev.dabirva.example.NoteViewModels.E
 import com.matbadev.dabirva.example.ui.NoteViewModel
 import com.matbadev.dabirva.example.ui.test.TestActivity
+import com.matbadev.dabirva.example.ui.test.TestActivityEvent
 import com.matbadev.dabirva.example.ui.test.TestActivityViewModel
-import com.matbadev.dabirva.example.util.DataBindingIdlingResourceRule
 import com.matbadev.dabirva.example.util.TrampolineExecutor
 import com.matbadev.dabirva.example.util.atViewPosition
 import com.matbadev.dabirva.example.util.loopMainThreadUntilIdle
@@ -26,45 +23,20 @@ import com.matbadev.dabirva.example.util.useActivity
 import com.matbadev.dabirva.example.util.value
 import com.matbadev.dabirva.example.util.withChildCount
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoMoreInteractions
-import org.mockito.junit.MockitoJUnit
-import org.mockito.junit.MockitoRule
-import org.mockito.quality.Strictness
 
-@RunWith(AndroidJUnit4::class)
-class ItemDiffingInstrumentedTest {
+class ItemDiffingInstrumentedTest : BaseInstrumentedTest<Parcelable, TestActivityEvent, TestActivityViewModel, TestActivity>(
+    activityClass = TestActivity::class,
+) {
 
     enum class DiffExecutorMode { SYNC, ASYNC }
 
-    @get:Rule
-    val dataBindingIdlingResourceRule = DataBindingIdlingResourceRule()
-
-    @get:Rule
-    val mockitoRule: MockitoRule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS)
-
-    @get:Rule
-    val activityScenarioRule: ActivityScenarioRule<TestActivity> = activityScenarioRule()
-
-    private val scenario: ActivityScenario<TestActivity>
-        get() = activityScenarioRule.scenario
-
     @Mock
     private lateinit var adapterDataObserver: AdapterDataObserver
-
-    private lateinit var viewModel: TestActivityViewModel
-
-    @Before
-    fun prepare() {
-        dataBindingIdlingResourceRule.setScenario(scenario)
-        viewModel = scenario.useActivity { it.viewModel }
-    }
 
     @Test
     fun insertSingleSync() {
