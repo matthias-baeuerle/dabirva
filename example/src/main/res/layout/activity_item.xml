@@ -7,16 +7,16 @@
 
         <variable
             name="viewModel"
-            type="com.matbadev.dabirva.example.ui.simple.SimpleListActivityViewModel" />
+            type="com.matbadev.dabirva.example.ui.item.ItemActivityViewModel" />
     </data>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/simple_list_recycler"
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:dabirvaData="@{viewModel.dabirvaData}"
+        app:dabirvaItems="@{viewModel.items}"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_note" />
+        tools:listitem="@layout/item_note_row" />
 
 </layout>
