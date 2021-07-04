@@ -34,6 +34,11 @@ class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
 
     private var attachedRecyclerView: RecyclerView? = null
 
+    init { // Stable IDs are not required when using DiffUtil.
+        // See: https://stackoverflow.com/a/62281250/
+        setHasStableIds(false)
+    }
+
     override fun getItemCount(): Int {
         return items.size
     }
@@ -41,16 +46,6 @@ class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         val item: ItemViewModel = items[position]
         return item.layoutId
-    }
-
-    // Stable IDs are not required when using DiffUtil.
-    // See: https://stackoverflow.com/a/62281250/
-    final override fun setHasStableIds(hasStableIds: Boolean) {
-        super.setHasStableIds(hasStableIds)
-    }
-
-    override fun getItemId(position: Int): Long {
-        return super.getItemId(position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBindingViewHolder {

@@ -23,25 +23,23 @@ public final class com/matbadev/dabirva/BuildConfig {
 	public fun <init> ()V
 }
 
-public class com/matbadev/dabirva/Dabirva : androidx/recyclerview/widget/RecyclerView$Adapter {
+public final class com/matbadev/dabirva/Dabirva : androidx/recyclerview/widget/RecyclerView$Adapter {
 	public fun <init> ()V
 	public final fun getDiffExecutor ()Ljava/util/concurrent/Executor;
-	public final fun getItemCount ()I
-	public final fun getItemId (I)J
-	public final fun getItemViewType (I)I
+	public fun getItemCount ()I
+	public fun getItemViewType (I)I
 	public final fun getItems ()Ljava/util/List;
 	public fun onAttachedToRecyclerView (Landroidx/recyclerview/widget/RecyclerView;)V
 	public synthetic fun onBindViewHolder (Landroidx/recyclerview/widget/RecyclerView$ViewHolder;I)V
 	public synthetic fun onBindViewHolder (Landroidx/recyclerview/widget/RecyclerView$ViewHolder;ILjava/util/List;)V
 	public fun onBindViewHolder (Lcom/matbadev/dabirva/DataBindingViewHolder;I)V
-	public final fun onBindViewHolder (Lcom/matbadev/dabirva/DataBindingViewHolder;ILjava/util/List;)V
+	public fun onBindViewHolder (Lcom/matbadev/dabirva/DataBindingViewHolder;ILjava/util/List;)V
 	public synthetic fun onCreateViewHolder (Landroid/view/ViewGroup;I)Landroidx/recyclerview/widget/RecyclerView$ViewHolder;
 	public fun onCreateViewHolder (Landroid/view/ViewGroup;I)Lcom/matbadev/dabirva/DataBindingViewHolder;
 	public fun onDetachedFromRecyclerView (Landroidx/recyclerview/widget/RecyclerView;)V
 	public synthetic fun onViewRecycled (Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)V
 	public fun onViewRecycled (Lcom/matbadev/dabirva/DataBindingViewHolder;)V
 	public final fun setDiffExecutor (Ljava/util/concurrent/Executor;)V
-	public final fun setHasStableIds (Z)V
 	public final fun setItems (Ljava/util/List;)V
 	public fun toString ()Ljava/lang/String;
 }
@@ -65,12 +63,11 @@ public class com/matbadev/dabirva/DataBindingTriggerClass {
 	public fun <init> ()V
 }
 
-public class com/matbadev/dabirva/DataBindingViewHolder : androidx/recyclerview/widget/RecyclerView$ViewHolder {
+public final class com/matbadev/dabirva/DataBindingViewHolder : androidx/recyclerview/widget/RecyclerView$ViewHolder {
 	public fun <init> (Landroidx/databinding/ViewDataBinding;)V
-	public fun bindViewModel (Lcom/matbadev/dabirva/ItemViewModel;)V
-	protected final fun getBinding ()Landroidx/databinding/ViewDataBinding;
+	public final fun bindViewModel (Lcom/matbadev/dabirva/ItemViewModel;)V
 	public final fun getBoundViewModel ()Lcom/matbadev/dabirva/ItemViewModel;
-	public fun unbind ()V
+	public final fun unbind ()V
 }
 
 public abstract interface class com/matbadev/dabirva/Diffable {
