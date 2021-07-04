@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -16,8 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            tools:ignore="HardcodedText">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/launch_simple_list"
@@ -28,7 +26,7 @@
                 android:onClick="@{view -> viewModel.startSimpleListActivity()}"
                 android:paddingStart="?android:attr/listPreferredItemPaddingStart"
                 android:paddingEnd="?android:attr/listPreferredItemPaddingRight"
-                android:text="Simple list"
+                android:text="@string/simple_title"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
@@ -39,7 +37,7 @@
                 android:onClick="@{view -> viewModel.startClickListActivity()}"
                 android:paddingStart="?android:attr/listPreferredItemPaddingStart"
                 android:paddingEnd="?android:attr/listPreferredItemPaddingRight"
-                android:text="Click listeners"
+                android:text="@string/click_list_title"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
@@ -50,7 +48,7 @@
                 android:onClick="@{view -> viewModel.startHorizontalStickyHeaderListActivity()}"
                 android:paddingStart="?android:attr/listPreferredItemPaddingStart"
                 android:paddingEnd="?android:attr/listPreferredItemPaddingRight"
-                android:text="List with horizontal sticky headers"
+                android:text="@string/stickyheader_horizontal_title"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
@@ -61,7 +59,7 @@
                 android:onClick="@{view -> viewModel.startVerticalStickyHeaderListActivity()}"
                 android:paddingStart="?android:attr/listPreferredItemPaddingStart"
                 android:paddingEnd="?android:attr/listPreferredItemPaddingRight"
-                android:text="List with vertical sticky headers"
+                android:text="@string/stickyheader_vertical_title"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
         </LinearLayout>

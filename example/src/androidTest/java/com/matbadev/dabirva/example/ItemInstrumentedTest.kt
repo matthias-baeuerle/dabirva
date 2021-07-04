@@ -4,7 +4,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.matbadev.dabirva.example.data.NoteGenerator
+import com.matbadev.dabirva.example.data.NoteRepository
 import com.matbadev.dabirva.example.ui.item.ItemActivity
 import com.matbadev.dabirva.example.ui.item.ItemActivityArguments
 import com.matbadev.dabirva.example.ui.item.ItemActivityEvent
@@ -20,7 +20,7 @@ class ItemInstrumentedTest : BaseInstrumentedTest<ItemActivityArguments, ItemAct
 
     override fun provideArguments(): ItemActivityArguments {
         return ItemActivityArguments(
-            items = NoteGenerator.generateNotes(),
+            items = NoteRepository().getNotes(),
         )
     }
 
