@@ -1,7 +1,7 @@
 package com.matbadev.dabirva.example.ui.stickyheader.vertical
 
 import android.os.Parcelable
-import com.matbadev.dabirva.DabirvaData
+import androidx.recyclerview.widget.RecyclerView
 import com.matbadev.dabirva.ItemViewModel
 import com.matbadev.dabirva.decoration.ItemHeaderProvider
 import com.matbadev.dabirva.decoration.VerticalStickyHeaderDecoration
@@ -16,18 +16,18 @@ class VerticalStickyHeaderListViewModel(
     private val noteRepository: NoteRepository,
 ) : BaseScreenViewModel<Parcelable, VerticalStickyHeaderListEvent>() {
 
-    lateinit var dabirvaData: DabirvaData
+    lateinit var items: List<ItemViewModel>
+
+    lateinit var itemDecorations: List<RecyclerView.ItemDecoration>
 
     override fun initWithArguments(arguments: Parcelable?) {
         super.initWithArguments(arguments)
-        dabirvaData = DabirvaData(
-            items = noteRepository.getNotes()
-                .groupBy { note -> note.priority }
-                .flatMap { noteEntry -> buildVerticalGroupViewModels(noteEntry) },
-            itemDecorations = listOf(
-                VerticalStickyHeaderDecoration(
-                    headerPositionProvider = ItemHeaderProvider { it is HeaderRowViewModel },
-                ),
+        items = noteRepository.getNotes()
+            .groupBy { note -> note.priority }
+            .flatMap { noteEntry -> buildVerticalGroupViewModels(noteEntry) }
+        itemDecorations = listOf(
+            VerticalStickyHeaderDecoration(
+                headerPositionProvider = ItemHeaderProvider { it is HeaderRowViewModel },
             ),
         )
     }

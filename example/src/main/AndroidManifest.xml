@@ -22,9 +22,9 @@
             android:parentActivityName=".ui.launch.LaunchActivity" />
 
         <activity
-            android:name=".ui.test.TestActivity"
+            android:name=".ui.item.ItemActivity"
             android:exported="true"
-            android:label="@string/item_diffing_title"
+            android:label="@string/item_activity_title"
             android:parentActivityName=".ui.launch.LaunchActivity" />
 
         <activity
@@ -39,12 +39,6 @@
         </activity>
 
         <activity
-            android:name=".ui.simple.SimpleListActivity"
-            android:exported="true"
-            android:label="@string/simple_title"
-            android:parentActivityName=".ui.launch.LaunchActivity" />
-
-        <activity
             android:name=".ui.stickyheader.horizontal.HorizontalStickyHeaderListActivity"
             android:exported="true"
             android:label="@string/stickyheader_horizontal_title"
@@ -54,6 +48,12 @@
             android:name=".ui.stickyheader.vertical.VerticalStickyHeaderListActivity"
             android:exported="true"
             android:label="@string/stickyheader_vertical_title"
+            android:parentActivityName=".ui.launch.LaunchActivity" />
+
+        <activity
+            android:name=".ui.test.TestActivity"
+            android:exported="true"
+            android:label="@string/test_activity_title"
             android:parentActivityName=".ui.launch.LaunchActivity" />
 
     </application>
