@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.matbadev.dabirva.internal.ConfigAsyncListDiffer
 import com.matbadev.dabirva.internal.DiffableDiffUtilCallback
 import com.matbadev.dabirva.internal.DiffableDiffUtilItemCallback
-import java.util.Objects
 import java.util.concurrent.Executor
 
 open class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
@@ -126,17 +125,6 @@ open class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
         val diffCallback: DiffUtil.Callback = DiffableDiffUtilCallback(oldItems, newItems)
         val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(diffCallback)
         diffResult.dispatchUpdatesTo(this)
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as Dabirva
-        return items == other.items && diffExecutor == other.diffExecutor
-    }
-
-    override fun hashCode(): Int {
-        return Objects.hash(items, diffExecutor)
     }
 
     override fun toString(): String {
