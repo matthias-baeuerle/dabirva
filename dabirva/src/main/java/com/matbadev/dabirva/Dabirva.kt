@@ -2,7 +2,6 @@ package com.matbadev.dabirva
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.CallSuper
 import androidx.annotation.VisibleForTesting
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -15,7 +14,7 @@ import com.matbadev.dabirva.internal.DiffableDiffUtilCallback
 import com.matbadev.dabirva.internal.DiffableDiffUtilItemCallback
 import java.util.concurrent.Executor
 
-open class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
+class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
 
     var items: List<ItemViewModel> = listOf()
         set(newItems) {
@@ -35,11 +34,11 @@ open class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
 
     private var attachedRecyclerView: RecyclerView? = null
 
-    final override fun getItemCount(): Int {
+    override fun getItemCount(): Int {
         return items.size
     }
 
-    final override fun getItemViewType(position: Int): Int {
+    override fun getItemViewType(position: Int): Int {
         val item: ItemViewModel = items[position]
         return item.layoutId
     }
@@ -50,7 +49,7 @@ open class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
         super.setHasStableIds(hasStableIds)
     }
 
-    final override fun getItemId(position: Int): Long {
+    override fun getItemId(position: Int): Long {
         return super.getItemId(position)
     }
 
@@ -60,23 +59,20 @@ open class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
         return DataBindingViewHolder(binding)
     }
 
-    @CallSuper
     override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int) {
         val item: ItemViewModel = items[position]
         holder.bindViewModel(item)
     }
 
-    final override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int, payloads: MutableList<Any>) {
         super.onBindViewHolder(holder, position, payloads)
     }
 
-    @CallSuper
     override fun onViewRecycled(holder: DataBindingViewHolder) {
         super.onViewRecycled(holder)
         holder.unbind()
     }
 
-    @CallSuper
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         attachRecyclerView(recyclerView)
@@ -87,7 +83,6 @@ open class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
         attachedRecyclerView = recyclerView
     }
 
-    @CallSuper
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
         detachRecyclerView()
