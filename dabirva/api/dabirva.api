@@ -31,9 +31,7 @@ public final class com/matbadev/dabirva/Dabirva : androidx/recyclerview/widget/R
 	public final fun getItems ()Ljava/util/List;
 	public fun onAttachedToRecyclerView (Landroidx/recyclerview/widget/RecyclerView;)V
 	public synthetic fun onBindViewHolder (Landroidx/recyclerview/widget/RecyclerView$ViewHolder;I)V
-	public synthetic fun onBindViewHolder (Landroidx/recyclerview/widget/RecyclerView$ViewHolder;ILjava/util/List;)V
 	public fun onBindViewHolder (Lcom/matbadev/dabirva/DataBindingViewHolder;I)V
-	public fun onBindViewHolder (Lcom/matbadev/dabirva/DataBindingViewHolder;ILjava/util/List;)V
 	public synthetic fun onCreateViewHolder (Landroid/view/ViewGroup;I)Landroidx/recyclerview/widget/RecyclerView$ViewHolder;
 	public fun onCreateViewHolder (Landroid/view/ViewGroup;I)Lcom/matbadev/dabirva/DataBindingViewHolder;
 	public fun onDetachedFromRecyclerView (Landroidx/recyclerview/widget/RecyclerView;)V

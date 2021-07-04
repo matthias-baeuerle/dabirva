@@ -59,10 +59,6 @@ class Dabirva : RecyclerView.Adapter<DataBindingViewHolder>() {
         holder.bindViewModel(item)
     }
 
-    override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int, payloads: MutableList<Any>) {
-        super.onBindViewHolder(holder, position, payloads)
-    }
-
     override fun onViewRecycled(holder: DataBindingViewHolder) {
         super.onViewRecycled(holder)
         holder.unbind()
