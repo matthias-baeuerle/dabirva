@@ -10,15 +10,15 @@ import com.matbadev.dabirva.example.ui.item.ItemActivityEvent
 import com.matbadev.dabirva.example.ui.item.ItemActivityViewModel
 import com.matbadev.dabirva.example.util.TrampolineExecutor
 import com.matbadev.dabirva.example.util.loopMainThreadUntilIdle
-import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 class DabirvaFactoryInstrumentedTest : BaseInstrumentedTest<ItemActivityArguments, ItemActivityEvent, ItemActivityViewModel, ItemActivity>(
     activityClass = ItemActivity::class,
 ) {
 
-    @After
+    @Before
     fun reset() {
         DabirvaConfig.factory = DabirvaFactory { Dabirva() }
     }

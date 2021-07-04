@@ -1,5 +1,7 @@
 package com.matbadev.dabirva
 
+import androidx.annotation.VisibleForTesting
+
 object DabirvaConfig {
 
     @JvmStatic
@@ -17,6 +19,11 @@ object DabirvaConfig {
     @JvmStatic
     fun lock() {
         locked = true
+    }
+
+    @VisibleForTesting
+    internal fun reset() {
+        locked = false
     }
 
 }

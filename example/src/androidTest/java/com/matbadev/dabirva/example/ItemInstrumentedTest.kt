@@ -17,6 +17,7 @@ import org.junit.Test
 class ItemInstrumentedTest : BaseInstrumentedTest<ItemActivityArguments, ItemActivityEvent, ItemActivityViewModel, ItemActivity>(
     activityClass = ItemActivity::class,
 ) {
+
     override fun provideArguments(): ItemActivityArguments {
         return ItemActivityArguments(
             items = NoteGenerator.generateNotes(),
