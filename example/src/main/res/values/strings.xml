@@ -1,13 +1,3 @@
 <resources>
     <string name="app_name">Dabirva Example</string>
-
-    <string name="simple_title">SimpleListActivity</string>
-
-    <string name="item_diffing_title">ItemDiffingActivity</string>
-
-    <string name="click_list_title">ClickListActivity</string>
-
-    <string name="stickyheader_horizontal_title">HorizontalStickyHeaderListActivity</string>
-
-    <string name="stickyheader_vertical_title">VerticalStickyHeaderListActivity</string>
 </resources>
