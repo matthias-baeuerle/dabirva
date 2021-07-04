@@ -12,7 +12,7 @@ plugins {
 ext {
     GROUP_ID = "com.matbadev.dabirva"
     ARTIFACT_ID = "dabirva"
-    VERSION_NAME = "1.0.0-SNAPSHOT"
+    VERSION_NAME = "1.0.0-alpha1"
     SNAPSHOT_BUILD = VERSION_NAME.endsWith("-SNAPSHOT")
 }
 
