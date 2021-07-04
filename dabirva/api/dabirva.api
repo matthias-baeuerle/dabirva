@@ -54,18 +54,6 @@ public final class com/matbadev/dabirva/DabirvaBindingAdapters {
 	public static final fun setItems (Landroidx/recyclerview/widget/RecyclerView;Ljava/util/List;)V
 }
 
-public final class com/matbadev/dabirva/DabirvaConfig {
-	public static final field INSTANCE Lcom/matbadev/dabirva/DabirvaConfig;
-	public static final fun getFactory ()Lcom/matbadev/dabirva/DabirvaFactory;
-	public static final fun getLocked ()Z
-	public static final fun lock ()V
-	public static final fun setFactory (Lcom/matbadev/dabirva/DabirvaFactory;)V
-}
-
-public abstract interface class com/matbadev/dabirva/DabirvaFactory {
-	public abstract fun create ()Lcom/matbadev/dabirva/Dabirva;
-}
-
 public class com/matbadev/dabirva/DataBinderMapperImpl : androidx/databinding/DataBinderMapper {
 	public fun <init> ()V
 	public fun collectDependencies ()Ljava/util/List;
