@@ -18,13 +18,13 @@
         <activity
             android:name=".ui.click.ClickListActivity"
             android:exported="true"
-            android:label="@string/click_list_title"
+            android:label="ClickListActivity"
             android:parentActivityName=".ui.launch.LaunchActivity" />
 
         <activity
             android:name=".ui.item.ItemActivity"
             android:exported="true"
-            android:label="@string/item_activity_title"
+            android:label="ItemActivity"
             android:parentActivityName=".ui.launch.LaunchActivity" />
 
         <activity
@@ -41,19 +41,19 @@
         <activity
             android:name=".ui.stickyheader.horizontal.HorizontalStickyHeaderListActivity"
             android:exported="true"
-            android:label="@string/stickyheader_horizontal_title"
+            android:label="HorizontalStickyHeaderListActivity"
             android:parentActivityName=".ui.launch.LaunchActivity" />
 
         <activity
             android:name=".ui.stickyheader.vertical.VerticalStickyHeaderListActivity"
             android:exported="true"
-            android:label="@string/stickyheader_vertical_title"
+            android:label="VerticalStickyHeaderListActivity"
             android:parentActivityName=".ui.launch.LaunchActivity" />
 
         <activity
             android:name=".ui.test.TestActivity"
             android:exported="true"
-            android:label="@string/test_activity_title"
+            android:label="TestActivity"
             android:parentActivityName=".ui.launch.LaunchActivity" />
 
     </application>
