@@ -12,6 +12,6 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Custom -->
-        <item name="stickyHeaderBackgroundColor">#dddddd</item>
+        <item name="stickyHeaderBackgroundColor">#333333</item>
     </style>
 </resources>
