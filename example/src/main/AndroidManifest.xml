@@ -39,12 +39,6 @@
         </activity>
 
         <activity
-            android:name=".ui.simple.SimpleListActivity"
-            android:exported="true"
-            android:label="SimpleListActivity"
-            android:parentActivityName=".ui.launch.LaunchActivity" />
-
-        <activity
             android:name=".ui.stickyheader.horizontal.HorizontalStickyHeaderListActivity"
             android:exported="true"
             android:label="HorizontalStickyHeaderListActivity"
