@@ -28,9 +28,10 @@ android {
         debug {
             testCoverageEnabled true
         }
+
         release {
             minifyEnabled false
-            testCoverageEnabled true
+            testCoverageEnabled false
         }
     }
 
