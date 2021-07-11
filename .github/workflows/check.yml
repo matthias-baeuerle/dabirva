@@ -2,9 +2,6 @@ name: check
 
 on:
   push:
-    branches:
-      # Trigger for pushes to develop to run when merging feature branches using squashing
-      - develop
   pull_request:
 
 env:
