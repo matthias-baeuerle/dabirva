@@ -251,9 +251,10 @@ class ItemDiffingInstrumentedTest : BaseInstrumentedTest<Parcelable, TestActivit
         val recyclerView: RecyclerView = scenario.useActivity { it.findViewById(R.id.recycler_view) }
         recyclerView.itemAnimator = null
 
-        // The initial insert is done synchronously by AsyncListDiffer.
-        viewModel.items.value = initialItems
+        // First set diff executor then items to make sure the initial insert takes place.
+        // That one is done synchronously by AsyncListDiffer.
         viewModel.diffExecutor.value = diffExecutor
+        viewModel.items.value = initialItems
 
         checkRecyclerViewItems(initialItems)
 
